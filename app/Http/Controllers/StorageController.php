@@ -12,8 +12,11 @@ class StorageController extends Controller
      */
     public function serve($path)
     {
+        // Log the incoming request for debugging
+        \Log::info('StorageController serving: ' . $path);
+        
         // Security check - only allow certain directories
-        $allowedPrefixes = ['homepage/', 'media/', 'careers/'];
+        $allowedPrefixes = ['homepage/', 'media/', 'careers/', 'posts/'];
         $isAllowed = false;
         
         foreach ($allowedPrefixes as $prefix) {
@@ -24,11 +27,16 @@ class StorageController extends Controller
         }
         
         if (!$isAllowed) {
+            \Log::warning('StorageController blocked access to: ' . $path);
             abort(403);
         }
         
         // Check if file exists in storage
         if (!Storage::disk('public')->exists($path)) {
+            \Log::error('StorageController file not found: ' . $path);
+            // Try to check actual file path
+            $fullPath = storage_path('app/public/' . $path);
+            \Log::error('Full path checked: ' . $fullPath . ' Exists: ' . (file_exists($fullPath) ? 'Yes' : 'No'));
             abort(404);
         }
         

@@ -185,7 +185,7 @@ class User extends Authenticatable
     /**
      * Log user activity.
      */
-    public function logActivity(string $action, string $description = null, array $metadata = []): void
+    public function logActivity(string $action, ?string $description = null, array $metadata = []): void
     {
         \DB::table('user_activity_logs')->insert([
             'user_id' => $this->id,
