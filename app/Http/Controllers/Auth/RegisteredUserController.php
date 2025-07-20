@@ -46,6 +46,12 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        // Redirect based on user role
+        if ($user->isAdmin()) {
+            return redirect(route('admin.dashboard', absolute: false));
+        }
+        
+        // Regular users (partners/donors) go to homepage
+        return redirect('/')->with('success', 'Thank you for registering! We have sent you a confirmation email.');
     }
 }

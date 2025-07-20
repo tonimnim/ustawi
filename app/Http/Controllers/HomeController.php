@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Str;
+use Illuminate\Http\RedirectResponse;
 
 class HomeController extends Controller
 {
@@ -16,8 +18,32 @@ class HomeController extends Controller
         // Get homepage settings including images
         $settings = $this->getHomeSettings();
         
+        // Get latest published blog posts
+        $latestPosts = \DB::table('posts')
+            ->join('post_categories', 'posts.category_id', '=', 'post_categories.id')
+            ->join('users', 'posts.author_id', '=', 'users.id')
+            ->select(
+                'posts.id',
+                'posts.title',
+                'posts.slug',
+                'posts.excerpt',
+                'posts.featured_image',
+                'posts.published_at',
+                'posts.views_count',
+                'post_categories.name as category_name',
+                'post_categories.color as category_color',
+                'users.name as author_name'
+            )
+            ->where('posts.status', 'published')
+            ->whereNotNull('posts.published_at')
+            ->where('posts.published_at', '<=', now())
+            ->orderBy('posts.published_at', 'desc')
+            ->limit(4)
+            ->get();
+        
         return Inertia::render('Homepage/Index', [
             'settings' => $settings,
+            'latestPosts' => $latestPosts,
         ]);
     }
 
@@ -31,6 +57,242 @@ class HomeController extends Controller
         return Inertia::render('Programs/Index', [
             'settings' => $settings,
         ]);
+    }
+
+    /**
+     * Display the contact page.
+     */
+    public function contact(): Response
+    {
+        $settings = $this->getHomeSettings();
+        
+        return Inertia::render('Contact/Index', [
+            'settings' => $settings,
+        ]);
+    }
+
+    /**
+     * Handle contact form submission.
+     */
+    public function submitContact(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'nullable|string|max:20',
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string|max:5000',
+        ]);
+
+        // Store the contact submission
+        \DB::table('contact_submissions')->insert([
+            'first_name' => $validated['first_name'],
+            'last_name' => $validated['last_name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'],
+            'subject' => $validated['subject'],
+            'message' => $validated['message'],
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // TODO: Send email notification to admin
+        
+        return redirect()->route('contact')
+            ->with('success', 'Thank you for contacting us! We will get back to you soon.');
+    }
+
+    /**
+     * Display the donation page.
+     */
+    public function donate(): Response
+    {
+        $settings = $this->getHomeSettings();
+        
+        return Inertia::render('Donate/Index', [
+            'settings' => $settings,
+        ]);
+    }
+
+    /**
+     * Display the blog listing page.
+     */
+    public function blog(Request $request): Response
+    {
+        $settings = $this->getHomeSettings();
+        
+        $query = \DB::table('posts')
+            ->join('post_categories', 'posts.category_id', '=', 'post_categories.id')
+            ->join('users', 'posts.author_id', '=', 'users.id')
+            ->select(
+                'posts.id',
+                'posts.title',
+                'posts.slug',
+                'posts.excerpt',
+                'posts.featured_image',
+                'posts.published_at',
+                'posts.views_count',
+                'post_categories.name as category_name',
+                'post_categories.color as category_color',
+                'users.name as author_name'
+            )
+            ->where('posts.status', 'published')
+            ->whereNotNull('posts.published_at')
+            ->where('posts.published_at', '<=', now());
+        
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = '%' . $request->search . '%';
+            $query->where(function ($q) use ($search) {
+                $q->where('posts.title', 'like', $search)
+                    ->orWhere('posts.excerpt', 'like', $search)
+                    ->orWhere('posts.content', 'like', $search);
+            });
+        }
+        
+        // Category filter
+        if ($request->filled('category')) {
+            $query->where('posts.category_id', $request->category);
+        }
+        
+        $posts = $query->orderBy('posts.published_at', 'desc')
+            ->paginate(12)
+            ->withQueryString();
+        
+        // Get categories for filter
+        $categories = \DB::table('post_categories')
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->select('id', 'name')
+            ->get();
+        
+        return Inertia::render('Blog/Index', [
+            'settings' => $settings,
+            'posts' => $posts,
+            'categories' => $categories,
+        ]);
+    }
+
+    /**
+     * Display a single blog post.
+     */
+    public function blogPost($slug): Response
+    {
+        $settings = $this->getHomeSettings();
+        
+        $post = \DB::table('posts')
+            ->join('post_categories', 'posts.category_id', '=', 'post_categories.id')
+            ->join('users', 'posts.author_id', '=', 'users.id')
+            ->select(
+                'posts.*',
+                'post_categories.name as category_name',
+                'post_categories.color as category_color',
+                'users.name as author_name'
+            )
+            ->where('posts.slug', $slug)
+            ->where('posts.status', 'published')
+            ->whereNotNull('posts.published_at')
+            ->where('posts.published_at', '<=', now())
+            ->first();
+        
+        if (!$post) {
+            abort(404);
+        }
+        
+        // Increment view count
+        \DB::table('posts')
+            ->where('id', $post->id)
+            ->increment('views_count');
+        
+        // Get related posts
+        $relatedPosts = \DB::table('posts')
+            ->join('post_categories', 'posts.category_id', '=', 'post_categories.id')
+            ->join('users', 'posts.author_id', '=', 'users.id')
+            ->select(
+                'posts.id',
+                'posts.title',
+                'posts.slug',
+                'posts.excerpt',
+                'posts.featured_image',
+                'posts.published_at',
+                'post_categories.name as category_name',
+                'post_categories.color as category_color'
+            )
+            ->where('posts.category_id', $post->category_id)
+            ->where('posts.id', '!=', $post->id)
+            ->where('posts.status', 'published')
+            ->whereNotNull('posts.published_at')
+            ->where('posts.published_at', '<=', now())
+            ->orderBy('posts.published_at', 'desc')
+            ->limit(3)
+            ->get();
+        
+        return Inertia::render('Blog/Show', [
+            'settings' => $settings,
+            'post' => $post,
+            'relatedPosts' => $relatedPosts,
+        ]);
+    }
+
+    /**
+     * Process donation.
+     */
+    public function processDonation(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'amount' => 'required|numeric|min:1',
+            'frequency' => 'required|in:one-time,monthly',
+            'payment_method' => 'required|in:paypal,card,mpesa,wire',
+            'project_designation' => 'required|string',
+            'donor_name' => 'required_unless:is_anonymous,true|string|max:255',
+            'donor_email' => 'required_unless:is_anonymous,true|email|max:255',
+            'donor_phone' => 'nullable|string|max:20',
+            'donor_message' => 'nullable|string|max:1000',
+            'is_anonymous' => 'boolean',
+        ]);
+
+        // Store the donation record
+        $donationId = \DB::table('donations')->insertGetId([
+            'amount' => $validated['amount'],
+            'frequency' => $validated['frequency'],
+            'payment_method' => $validated['payment_method'],
+            'project_designation' => $validated['project_designation'],
+            'donor_name' => $validated['is_anonymous'] ? 'Anonymous' : $validated['donor_name'],
+            'donor_email' => $validated['is_anonymous'] ? null : $validated['donor_email'],
+            'donor_phone' => $validated['donor_phone'],
+            'donor_message' => $validated['donor_message'],
+            'is_anonymous' => $validated['is_anonymous'] ?? false,
+            'status' => 'pending',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // Handle payment based on method
+        switch ($validated['payment_method']) {
+            case 'mpesa':
+                // TODO: Integrate M-Pesa STK Push
+                return redirect()->route('donate')
+                    ->with('success', 'M-Pesa payment initiated. Please check your phone for the STK push prompt.');
+                
+            case 'paypal':
+                // TODO: Redirect to PayPal
+                return redirect()->route('donate')
+                    ->with('success', 'Redirecting to PayPal...');
+                
+            case 'card':
+                // TODO: Process card payment
+                return redirect()->route('donate')
+                    ->with('success', 'Processing card payment...');
+                
+            case 'wire':
+                return redirect()->route('donate')
+                    ->with('success', 'Thank you! Please complete the wire transfer using the provided bank details.');
+                
+            default:
+                return redirect()->route('donate')
+                    ->with('error', 'Invalid payment method selected.');
+        }
     }
 
     /**

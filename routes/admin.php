@@ -3,7 +3,13 @@
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\AdminUsersController;
+use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\LogsController;
+use App\Http\Controllers\Admin\PostsController;
+use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\CareersController as AdminCareersController;
+use App\Http\Controllers\Admin\NewsletterController as AdminNewsletterController;
+use App\Http\Controllers\Admin\ContactsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -45,13 +51,26 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         return inertia('Admin/Pages/Index');
     })->name('pages.index');
 
-    Route::get('/posts', function () {
-        return inertia('Admin/Posts/Index');
-    })->name('posts.index');
+    // Blog Posts Management
+    Route::prefix('posts')->name('posts.')->group(function () {
+        Route::get('/', [PostsController::class, 'index'])->name('index');
+        Route::get('/create', [PostsController::class, 'create'])->name('create');
+        Route::post('/', [PostsController::class, 'store'])->name('store');
+        Route::get('/{post}/edit', [PostsController::class, 'edit'])->name('edit');
+        Route::put('/{post}', [PostsController::class, 'update'])->name('update');
+        Route::delete('/{post}', [PostsController::class, 'destroy'])->name('destroy');
+        Route::put('/{post}/toggle-featured', [PostsController::class, 'toggleFeatured'])->name('toggle-featured');
+        
+        // Categories
+        Route::get('/categories', [PostsController::class, 'categories'])->name('categories');
+        Route::post('/categories', [PostsController::class, 'storeCategory'])->name('categories.store');
+    });
 
-    Route::get('/media', function () {
-        return inertia('Admin/Media/Index');
-    })->name('media.index');
+    // Media API routes (used by posts, but no standalone media library)
+    Route::prefix('media')->name('media.')->group(function () {
+        Route::post('/upload', [MediaController::class, 'upload'])->name('upload');
+        Route::get('/all', [MediaController::class, 'all'])->name('all');
+    });
 
     Route::get('/team', function () {
         return inertia('Admin/Team/Index');
@@ -73,21 +92,21 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         return inertia('Admin/Donations/Index');
     })->name('donations.index');
 
-    Route::get('/donors', function () {
-        return inertia('Admin/Donors/Index');
-    })->name('donors.index');
-
-    Route::get('/reports', function () {
-        return inertia('Admin/Reports/Index');
-    })->name('reports.index');
 
     Route::get('/payments', function () {
         return inertia('Admin/Payments/Index');
     })->name('payments.index');
 
-    Route::get('/users', function () {
-        return inertia('Admin/Users/Index');
-    })->name('users.index');
+    // User Management
+    Route::prefix('users')->name('users.')->group(function () {
+        Route::get('/', [UsersController::class, 'index'])->name('index');
+        Route::get('/{user}', [UsersController::class, 'show'])->name('show');
+        Route::get('/{user}/edit', [UsersController::class, 'edit'])->name('edit');
+        Route::put('/{user}', [UsersController::class, 'update'])->name('update');
+        Route::put('/{user}/toggle-status', [UsersController::class, 'toggleStatus'])->name('toggle-status');
+        Route::put('/{user}/verify-email', [UsersController::class, 'verifyEmail'])->name('verify-email');
+        Route::delete('/{user}', [UsersController::class, 'destroy'])->name('destroy');
+    });
 
     Route::get('/applications', function () {
         return inertia('Admin/Applications/Index');
@@ -97,13 +116,40 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         return inertia('Admin/Jobs/Index');
     })->name('jobs.index');
 
-    Route::get('/newsletter', function () {
-        return inertia('Admin/Newsletter/Index');
-    })->name('newsletter.index');
+    // Newsletter Management
+    Route::prefix('newsletter')->name('newsletter.')->group(function () {
+        Route::get('/', [AdminNewsletterController::class, 'index'])->name('index');
+        Route::get('/export', [AdminNewsletterController::class, 'export'])->name('export');
+        Route::delete('/{id}', [AdminNewsletterController::class, 'destroy'])->name('destroy');
+        Route::put('/{id}/toggle-status', [AdminNewsletterController::class, 'toggleStatus'])->name('toggle-status');
+    });
+    
+    // Careers Management
+    Route::prefix('careers')->name('careers.')->group(function () {
+        Route::get('/', [AdminCareersController::class, 'index'])->name('index');
+        Route::get('/create', [AdminCareersController::class, 'create'])->name('create');
+        Route::post('/', [AdminCareersController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [AdminCareersController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [AdminCareersController::class, 'update'])->name('update');
+        Route::delete('/{id}', [AdminCareersController::class, 'destroy'])->name('destroy');
+        Route::put('/{id}/toggle-active', [AdminCareersController::class, 'toggleActive'])->name('toggle-active');
+        
+        // Applications
+        Route::get('/applications/{id}', [AdminCareersController::class, 'viewApplication'])->name('applications.view');
+        Route::put('/applications/{id}/status', [AdminCareersController::class, 'updateApplicationStatus'])->name('applications.update-status');
+        Route::get('/applications/{id}/download-cv', [AdminCareersController::class, 'downloadCV'])->name('applications.download-cv');
+    });
 
-    Route::get('/contacts', function () {
-        return inertia('Admin/Contacts/Index');
-    })->name('contacts.index');
+    // Contact Messages Management
+    Route::prefix('contacts')->name('contacts.')->group(function () {
+        Route::get('/', [ContactsController::class, 'index'])->name('index');
+        Route::get('/{id}', [ContactsController::class, 'show'])->name('show');
+        Route::put('/{id}/toggle-read', [ContactsController::class, 'toggleRead'])->name('toggle-read');
+        Route::post('/{id}/reply', [ContactsController::class, 'reply'])->name('reply');
+        Route::delete('/{id}', [ContactsController::class, 'destroy'])->name('destroy');
+        Route::post('/bulk-delete', [ContactsController::class, 'bulkDelete'])->name('bulk-delete');
+        Route::post('/bulk-mark-read', [ContactsController::class, 'bulkMarkRead'])->name('bulk-mark-read');
+    });
 
     Route::get('/campaigns', function () {
         return inertia('Admin/Campaigns/Index');

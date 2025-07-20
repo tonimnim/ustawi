@@ -4,7 +4,9 @@
       "Bash(grep:*)",
       "Bash(cp:*)",
       "Bash(mkdir:*)",
-      "Bash(php artisan:*)"
+      "Bash(php artisan:*)",
+      "Bash(npm install:*)",
+      "Bash(dir public)"
     ],
     "deny": []
   }

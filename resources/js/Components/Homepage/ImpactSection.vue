@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
+import { Link } from '@inertiajs/vue3';
 
 const props = defineProps({
     settings: Object,
@@ -208,9 +209,9 @@ onUnmounted(() => {
                     <h3 class="text-3xl font-bold mb-4">Be Part of the Change</h3>
                     <p class="text-xl mb-8 opacity-90">Join us in creating sustainable impact in communities across Kenya</p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                        <button class="bg-white text-sky-600 px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300">
+                        <Link href="/donate" class="bg-white text-sky-600 px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 inline-block text-center">
                             Donate Now
-                        </button>
+                        </Link>
                         <button class="border-2 border-white text-white px-8 py-4 rounded-full font-semibold hover:bg-white hover:text-sky-600 transition-all duration-300">
                             Volunteer With Us
                         </button>

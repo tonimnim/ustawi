@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue';
+import { Link } from '@inertiajs/vue3';
 
 const props = defineProps({
     settings: Object,
@@ -190,10 +191,10 @@ watch(isLoading, (newValue) => {
 
                     <!-- Call-to-Action Buttons -->
                     <div class="flex flex-col sm:flex-row gap-4 pt-4 lg:-ml-12">
-                        <button class="group relative px-8 py-4 bg-white text-blue-700 rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
+                        <Link href="/donate" class="group relative px-8 py-4 bg-white text-blue-700 rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 inline-block text-center">
                             <span class="relative z-10">Donate Now</span>
                             <div class="absolute inset-0 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        </button>
+                        </Link>
                         <button class="group px-8 py-4 border-2 border-white/40 text-white rounded-xl font-semibold text-lg backdrop-blur-sm bg-white/10 hover:bg-white/20 hover:border-white/60 transition-all duration-300">
                             Learn Our Story
                             <svg class="inline-block ml-2 w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">

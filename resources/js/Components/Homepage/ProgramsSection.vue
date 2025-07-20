@@ -361,9 +361,12 @@ const coordinators = [
                         <h3 class="text-4xl font-bold mb-6">Want to Support Our Programs?</h3>
                         <p class="text-2xl mb-10 text-white/90">Join us in creating lasting impact in communities across Kenya</p>
                         <div class="flex flex-col sm:flex-row gap-6 justify-center">
-                            <button class="bg-white text-blue-600 px-10 py-5 rounded-full font-bold text-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                            <Link 
+                                href="/donate"
+                                class="inline-block bg-white text-blue-600 px-10 py-5 rounded-full font-bold text-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-center"
+                            >
                                 Donate Now
-                            </button>
+                            </Link>
                             <Link 
                                 href="/programs"
                                 class="inline-block border-2 border-white text-white px-10 py-5 rounded-full font-bold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300 text-center"

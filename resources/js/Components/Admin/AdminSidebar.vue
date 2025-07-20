@@ -26,28 +26,14 @@ const navigationItems = [
         name: 'Content Management',
         icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253',
         submenu: [
-            { name: 'Pages', href: '/admin/pages' },
             { name: 'Blog Posts', href: '/admin/posts' },
-            { name: 'Media Library', href: '/admin/media' },
-            { name: 'Team Members', href: '/admin/team' },
-        ]
-    },
-    {
-        name: 'Projects',
-        icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10',
-        submenu: [
-            { name: 'All Projects', href: '/admin/projects' },
-            { name: 'Impact Metrics', href: '/admin/metrics' },
-            { name: 'Success Stories', href: '/admin/stories' },
         ]
     },
     {
         name: 'Donations & Finance',
         icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
         submenu: [
-            { name: 'All Donations', href: '/admin/donations' },
-            { name: 'Donors', href: '/admin/donors' },
-            { name: 'Reports', href: '/admin/reports' },
+            { name: 'Donations', href: '/admin/donations' },
             { name: 'Payment Settings', href: '/admin/payments' },
         ]
     },
@@ -56,27 +42,9 @@ const navigationItems = [
         icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z',
         submenu: [
             { name: 'All Users', href: '/admin/users' },
-            { name: 'Job Applications', href: '/admin/applications' },
-            { name: 'Job Listings', href: '/admin/jobs' },
+            { name: 'Careers', href: '/admin/careers' },
             { name: 'Newsletter', href: '/admin/newsletter' },
-        ]
-    },
-    {
-        name: 'Communications',
-        icon: 'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z',
-        submenu: [
             { name: 'Contact Messages', href: '/admin/contacts' },
-            { name: 'Email Campaigns', href: '/admin/campaigns' },
-            { name: 'Comments', href: '/admin/comments' },
-        ]
-    },
-    {
-        name: 'Analytics',
-        icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z',
-        submenu: [
-            { name: 'Website Stats', href: '/admin/analytics' },
-            { name: 'Donation Analytics', href: '/admin/donation-analytics' },
-            { name: 'Custom Reports', href: '/admin/custom-reports' },
         ]
     },
     {
