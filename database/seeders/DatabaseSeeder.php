@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Run the admin user seeder
-        $this->call(CreateAdminUserSeeder::class);
+        // No default users will be created
+        // Users should be created through the application interface
     }
 }

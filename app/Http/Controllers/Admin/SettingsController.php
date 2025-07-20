@@ -138,20 +138,21 @@ class SettingsController extends Controller
      */
     private function updateHomepageSettings(Request $request)
     {
-        $request->validate([
-            'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
-            'existing_images' => 'nullable|string',
-        ]);
+        try {
+            $request->validate([
+                'images' => 'nullable|array',
+                'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+                'existing_images' => 'nullable|string',
+            ]);
 
-        $uploadedImages = [];
-        
-        // Handle existing images to keep
-        $existingImages = [];
-        if ($request->has('existing_images')) {
-            $existingImagesRaw = json_decode($request->existing_images, true);
-            $existingImages = is_array($existingImagesRaw) ? $existingImagesRaw : [];
-        }
+            $uploadedImages = [];
+            
+            // Handle existing images to keep
+            $existingImages = [];
+            if ($request->has('existing_images')) {
+                $existingImagesRaw = json_decode($request->existing_images, true);
+                $existingImages = is_array($existingImagesRaw) ? $existingImagesRaw : [];
+            }
 
         // Process new image uploads
         if ($request->hasFile('images')) {
@@ -240,6 +241,11 @@ class SettingsController extends Controller
             : 'Homepage images updated successfully.';
 
         return back()->with('success', $message);
+        
+        } catch (\Exception $e) {
+            \Log::error('Homepage settings update error: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Failed to update homepage settings: ' . $e->getMessage()]);
+        }
     }
 
 
