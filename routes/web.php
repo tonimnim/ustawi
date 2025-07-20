@@ -66,3 +66,8 @@ Route::get('/debug/homepage-images', function () {
 
 // Include admin routes
 require __DIR__.'/admin.php';
+
+// Storage file serving route for Laravel Cloud
+Route::get('/storage/{path}', [\App\Http\Controllers\StorageController::class, 'serve'])
+    ->where('path', '.*')
+    ->name('storage.serve');
