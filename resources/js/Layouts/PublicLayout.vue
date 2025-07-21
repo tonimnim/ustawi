@@ -60,24 +60,25 @@ onUnmounted(() => {
             <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between items-center h-20">
                     <!-- Logo -->
-                    <div class="flex items-center space-x-3">
+                    <div class="flex items-center space-x-2 sm:space-x-3">
                         <img 
                             src="/images/ustawilogo.jpeg" 
                             alt="Ustawi Wa Jamii Logo" 
-                            class="h-12 w-12 rounded-full"
+                            class="h-10 w-10 sm:h-12 sm:w-12 rounded-full"
                         >
                         <div>
                             <h1 
                                 :class="[
-                                    'text-xl font-bold transition-colors duration-300',
+                                    'text-lg sm:text-xl font-bold transition-colors duration-300',
                                     isScrolled ? 'text-gray-900' : 'text-white'
                                 ]"
                             >
-                                {{ settings.organization_name }}
+                                <span class="hidden sm:inline">{{ settings.organization_name }}</span>
+                                <span class="sm:hidden">Ustawi Wa Jamii</span>
                             </h1>
                             <p 
                                 :class="[
-                                    'text-sm transition-colors duration-300',
+                                    'text-xs sm:text-sm transition-colors duration-300',
                                     isScrolled ? 'text-gray-600' : 'text-white/90'
                                 ]"
                             >

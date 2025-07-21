@@ -133,7 +133,7 @@ watch(isLoading, (newValue) => {
 
 <template>
     <!-- Hero Section -->
-    <section class="relative min-h-screen bg-gradient-to-br from-blue-600 via-teal-500 to-green-400 overflow-x-hidden">
+    <section class="relative min-h-screen bg-gradient-to-br from-blue-600 via-teal-500 to-green-400 overflow-hidden">
         <!-- Background Pattern -->
         <div class="absolute inset-0 opacity-20">
             <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.4) 1px, transparent 0); background-size: 20px 20px;"></div>
@@ -143,24 +143,24 @@ watch(isLoading, (newValue) => {
         <div class="absolute inset-0 bg-gradient-to-t from-blue-900/30 via-transparent to-green-300/20"></div>
         
         <!-- Floating Elements -->
-        <div class="absolute top-20 right-20 w-32 h-32 bg-green-300/30 rounded-full blur-xl animate-pulse"></div>
-        <div class="absolute bottom-20 left-20 w-40 h-40 bg-blue-400/30 rounded-full blur-xl animate-pulse delay-1000"></div>
-        <div class="absolute top-1/2 right-1/3 w-24 h-24 bg-teal-300/20 rounded-full blur-2xl animate-pulse delay-500"></div>
+        <div class="absolute top-10 right-10 md:top-20 md:right-20 w-20 h-20 md:w-32 md:h-32 bg-green-300/30 rounded-full blur-xl animate-pulse"></div>
+        <div class="absolute bottom-10 left-10 md:bottom-20 md:left-20 w-24 h-24 md:w-40 md:h-40 bg-blue-400/30 rounded-full blur-xl animate-pulse delay-1000"></div>
+        <div class="absolute top-1/2 right-1/4 md:right-1/3 w-16 h-16 md:w-24 md:h-24 bg-teal-300/20 rounded-full blur-2xl animate-pulse delay-500"></div>
         
-        <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-8 h-screen flex items-center">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center w-full">
+        <div class="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 min-h-screen flex items-center py-20 md:py-0">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-24 items-center w-full">
                 
                 <!-- Left Content -->
                 <div class="text-white space-y-8">
                     <!-- Badge -->
-                    <div class="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full border border-white/30 lg:-ml-12">
+                    <div class="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 backdrop-blur-sm rounded-full border border-white/30 lg:-ml-12 text-xs sm:text-sm mx-auto lg:mx-0">
                         <span class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
-                        <span class="text-sm font-medium text-white">Making Impact Since 2024</span>
+                        <span class="font-medium text-white">Making Impact Since 2024</span>
                     </div>
 
                     <!-- Main Heading -->
                     <div class="space-y-6">
-                        <h1 class="text-5xl lg:text-7xl font-bold leading-tight text-center lg:text-left lg:-ml-12">
+                        <h1 class="text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight text-center lg:text-left lg:-ml-12">
                             <span class="block">Empowering</span>
                             <span class="block bg-gradient-to-r from-blue-200 to-sky-100 bg-clip-text text-transparent">
                                 Communities
@@ -168,36 +168,36 @@ watch(isLoading, (newValue) => {
                             <span class="block">Across Kenya</span>
                         </h1>
                         
-                        <p class="text-xl lg:text-2xl text-white/90 leading-relaxed max-w-2xl text-center lg:text-left mx-auto lg:mx-0 lg:-ml-12">
+                        <p class="text-base sm:text-lg lg:text-2xl text-white/90 leading-relaxed max-w-2xl text-center lg:text-left mx-auto lg:mx-0 lg:-ml-12">
                             Building sustainable futures through youth leadership, innovation, and community-driven development that creates lasting positive change.
                         </p>
                     </div>
 
                     <!-- Stats -->
-                    <div class="grid grid-cols-3 gap-6 py-8 lg:-ml-12">
+                    <div class="grid grid-cols-3 gap-3 sm:gap-6 py-6 sm:py-8 lg:-ml-12">
                         <div class="text-center lg:text-left">
-                            <div class="text-3xl lg:text-4xl font-bold text-white">1,250+</div>
-                            <div class="text-sm text-white/80">Lives Transformed</div>
+                            <div class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">1,250+</div>
+                            <div class="text-xs sm:text-sm text-white/80">Lives Transformed</div>
                         </div>
                         <div class="text-center lg:text-left">
-                            <div class="text-3xl lg:text-4xl font-bold text-white">45+</div>
-                            <div class="text-sm text-white/80">Projects Completed</div>
+                            <div class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">45+</div>
+                            <div class="text-xs sm:text-sm text-white/80">Projects Completed</div>
                         </div>
                         <div class="text-center lg:text-left">
-                            <div class="text-3xl lg:text-4xl font-bold text-white">12</div>
-                            <div class="text-sm text-white/80">Counties Reached</div>
+                            <div class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">12</div>
+                            <div class="text-xs sm:text-sm text-white/80">Counties Reached</div>
                         </div>
                     </div>
 
                     <!-- Call-to-Action Buttons -->
-                    <div class="flex flex-col sm:flex-row gap-4 pt-4 lg:-ml-12">
-                        <Link href="/donate" class="group relative px-8 py-4 bg-white text-blue-700 rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 inline-block text-center">
+                    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 lg:-ml-12">
+                        <Link href="/donate" class="group relative px-6 sm:px-8 py-3 sm:py-4 bg-white text-blue-700 rounded-xl font-semibold text-base sm:text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 inline-block text-center">
                             <span class="relative z-10">Donate Now</span>
                             <div class="absolute inset-0 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         </Link>
-                        <button class="group px-8 py-4 border-2 border-white/40 text-white rounded-xl font-semibold text-lg backdrop-blur-sm bg-white/10 hover:bg-white/20 hover:border-white/60 transition-all duration-300">
+                        <button class="group px-6 sm:px-8 py-3 sm:py-4 border-2 border-white/40 text-white rounded-xl font-semibold text-base sm:text-lg backdrop-blur-sm bg-white/10 hover:bg-white/20 hover:border-white/60 transition-all duration-300">
                             Learn Our Story
-                            <svg class="inline-block ml-2 w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="inline-block ml-2 w-4 sm:w-5 h-4 sm:h-5 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                             </svg>
                         </button>
@@ -205,11 +205,11 @@ watch(isLoading, (newValue) => {
                 </div>
 
                 <!-- Right Side - Hero Image/Visual -->
-                <div class="relative lg:h-full flex items-center justify-end">
+                <div class="relative lg:h-full flex items-center justify-center lg:justify-end mt-8 lg:mt-0">
                     <!-- Image Carousel -->
                     <div 
                         v-if="hasImages" 
-                        class="relative w-full lg:w-[200%] lg:-mr-16"
+                        class="relative w-full max-w-lg lg:max-w-none lg:w-[200%] lg:-mr-16"
                         @mouseenter="pauseCarousel"
                         @mouseleave="resumeCarousel"
                     >
@@ -222,9 +222,9 @@ watch(isLoading, (newValue) => {
                         </div>
                         
                         <!-- Main Image Container -->
-                        <div class="relative rounded-2xl overflow-hidden shadow-2xl group">
+                        <div class="relative rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl group">
                             <!-- Images with slide animation -->
-                            <div class="relative w-full overflow-hidden" style="padding-bottom: 65%; min-height: 550px;">
+                            <div class="relative w-full overflow-hidden aspect-[4/3] md:aspect-[16/10] lg:aspect-[3/2]">
                                 <div 
                                     v-for="(image, index) in settings.homepage_images"
                                     :key="image.id || index"
@@ -307,9 +307,9 @@ watch(isLoading, (newValue) => {
                     </div>
                     
                     <!-- Fallback when no images -->
-                    <div v-else class="text-center text-white/80">
-                        <div class="w-full max-w-md mx-auto">
-                            <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-12 border border-white/20 transform hover:scale-105 transition-transform duration-300">
+                    <div v-else class="text-center text-white/80 px-4">
+                        <div class="w-full max-w-sm md:max-w-md mx-auto">
+                            <div class="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-8 sm:p-12 border border-white/20 transform hover:scale-105 transition-transform duration-300">
                                 <div class="animate-pulse">
                                     <svg class="w-20 h-20 mx-auto text-white/60 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>

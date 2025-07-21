@@ -40,109 +40,109 @@ onUnmounted(() => {
 <template>
     <section id="about" class="relative overflow-hidden">
         <!-- Main background -->
-        <div class="relative bg-white py-20">
+        <div class="relative bg-white py-12 sm:py-16 lg:py-20">
             <!-- Decorative elements -->
-            <div class="absolute top-10 left-10 w-72 h-72 bg-blue-200/20 rounded-full blur-3xl"></div>
-            <div class="absolute bottom-10 right-10 w-96 h-96 bg-green-200/20 rounded-full blur-3xl"></div>
+            <div class="absolute top-10 left-10 w-40 h-40 sm:w-56 sm:h-56 lg:w-72 lg:h-72 bg-blue-200/20 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-10 right-10 w-48 h-48 sm:w-72 sm:h-72 lg:w-96 lg:h-96 bg-green-200/20 rounded-full blur-3xl"></div>
             
-            <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <!-- Section Header -->
-                <div class="text-center mb-16" :class="{ 'opacity-0 translate-y-10': !isVisible, 'opacity-100 translate-y-0 transition-all duration-1000': isVisible }">
-                    <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+                <div class="text-center mb-10 sm:mb-12 lg:mb-16" :class="{ 'opacity-0 translate-y-10': !isVisible, 'opacity-100 translate-y-0 transition-all duration-1000': isVisible }">
+                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6">
                         Building Stronger Communities
                         <span class="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-green-500 mt-2">
                             Together
                         </span>
                     </h2>
                     <div class="max-w-3xl mx-auto">
-                        <p class="text-xl text-gray-600">We are a community-driven organization dedicated to creating sustainable development and empowering youth across Kenya through innovative programs and collective action.</p>
+                        <p class="text-base sm:text-lg lg:text-xl text-gray-600 px-2 sm:px-0">We are a community-driven organization dedicated to creating sustainable development and empowering youth across Kenya through innovative programs and collective action.</p>
                     </div>
                 </div>
 
                 <!-- Main Content Area -->
                 <div class="space-y-16">
                     <!-- Mission, Vision & Objectives Grid -->
-                    <div class="grid lg:grid-cols-3 gap-8" :class="{ 'opacity-0 translate-y-10': !isVisible, 'opacity-100 translate-y-0 transition-all duration-1000 delay-300': isVisible }">
+                    <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8" :class="{ 'opacity-0 translate-y-10': !isVisible, 'opacity-100 translate-y-0 transition-all duration-1000 delay-300': isVisible }">
                         <!-- Mission Card -->
-                        <div class="group relative">
+                        <div class="group relative md:col-span-2 lg:col-span-1">
                             <div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl opacity-10 group-hover:opacity-20 transition-opacity duration-300"></div>
-                            <div class="relative bg-white rounded-2xl p-8 h-full shadow-lg hover:shadow-2xl transition-all duration-300 border border-blue-100">
-                                <div class="flex items-center mb-6">
-                                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
-                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="relative bg-white rounded-xl sm:rounded-2xl p-6 sm:p-8 h-full shadow-lg hover:shadow-2xl transition-all duration-300 border border-blue-100">
+                                <div class="flex items-center mb-4 sm:mb-6">
+                                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                                         </svg>
                                     </div>
-                                    <h3 class="text-2xl font-bold text-gray-900 ml-4">Our Mission</h3>
+                                    <h3 class="text-xl sm:text-2xl font-bold text-gray-900 ml-3 sm:ml-4">Our Mission</h3>
                                 </div>
-                                <p class="text-gray-600 leading-relaxed">{{ settings.mission_statement }}</p>
+                                <p class="text-sm sm:text-base text-gray-600 leading-relaxed">{{ settings.mission_statement }}</p>
                             </div>
                         </div>
 
                         <!-- Vision Card -->
-                        <div class="group relative">
+                        <div class="group relative md:col-span-2 lg:col-span-1">
                             <div class="absolute inset-0 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl opacity-10 group-hover:opacity-20 transition-opacity duration-300"></div>
-                            <div class="relative bg-white rounded-2xl p-8 h-full shadow-lg hover:shadow-2xl transition-all duration-300 border border-green-100">
-                                <div class="flex items-center mb-6">
-                                    <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center">
-                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="relative bg-white rounded-xl sm:rounded-2xl p-6 sm:p-8 h-full shadow-lg hover:shadow-2xl transition-all duration-300 border border-green-100">
+                                <div class="flex items-center mb-4 sm:mb-6">
+                                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                         </svg>
                                     </div>
-                                    <h3 class="text-2xl font-bold text-gray-900 ml-4">Our Vision</h3>
+                                    <h3 class="text-xl sm:text-2xl font-bold text-gray-900 ml-3 sm:ml-4">Our Vision</h3>
                                 </div>
-                                <p class="text-gray-600 leading-relaxed">A Kenya where every community has access to sustainable development opportunities, where youth are empowered as leaders of change, and where collective action creates lasting positive impact for generations to come.</p>
+                                <p class="text-sm sm:text-base text-gray-600 leading-relaxed">A Kenya where every community has access to sustainable development opportunities, where youth are empowered as leaders of change, and where collective action creates lasting positive impact for generations to come.</p>
                             </div>
                         </div>
 
                         <!-- Objectives Card -->
-                        <div class="group relative lg:row-span-2">
+                        <div class="group relative md:col-span-2 lg:col-span-1 lg:row-span-2">
                             <div class="absolute inset-0 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl opacity-10 group-hover:opacity-20 transition-opacity duration-300"></div>
-                            <div class="relative bg-white rounded-2xl p-8 h-full shadow-lg hover:shadow-2xl transition-all duration-300 border border-purple-100">
-                                <div class="flex items-center mb-6">
-                                    <span class="text-3xl mr-3">🎯</span>
-                                    <h3 class="text-2xl font-bold text-gray-900">Our Objectives</h3>
+                            <div class="relative bg-white rounded-xl sm:rounded-2xl p-6 sm:p-8 h-full shadow-lg hover:shadow-2xl transition-all duration-300 border border-purple-100">
+                                <div class="flex items-center mb-4 sm:mb-6">
+                                    <span class="text-2xl sm:text-3xl mr-2 sm:mr-3">🎯</span>
+                                    <h3 class="text-xl sm:text-2xl font-bold text-gray-900">Our Objectives</h3>
                                 </div>
-                                <ul class="space-y-4">
+                                <ul class="space-y-3 sm:space-y-4">
                                     <li class="flex items-start">
-                                        <div class="w-2 h-2 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                                        <p class="text-gray-600">Promote climate-smart and sustainable agricultural practices.</p>
+                                        <div class="w-2 h-2 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full mt-1.5 sm:mt-2 mr-2 sm:mr-3 flex-shrink-0"></div>
+                                        <p class="text-sm sm:text-base text-gray-600">Promote climate-smart and sustainable agricultural practices.</p>
                                     </li>
                                     <li class="flex items-start">
                                         <div class="w-2 h-2 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                                        <p class="text-gray-600">Increase access to legal services for vulnerable and marginalized populations.</p>
+                                        <p class="text-sm sm:text-base text-gray-600">Increase access to legal services for vulnerable and marginalized populations.</p>
                                     </li>
                                     <li class="flex items-start">
-                                        <div class="w-2 h-2 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                                        <p class="text-gray-600">Enhance youth and women's economic participation through agribusiness and social innovation.</p>
+                                        <div class="w-2 h-2 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full mt-1.5 sm:mt-2 mr-2 sm:mr-3 flex-shrink-0"></div>
+                                        <p class="text-sm sm:text-base text-gray-600">Enhance youth and women's economic participation through agribusiness and social innovation.</p>
                                     </li>
                                     <li class="flex items-start">
-                                        <div class="w-2 h-2 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                                        <p class="text-gray-600">Strengthen community-led climate and environmental action.</p>
+                                        <div class="w-2 h-2 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full mt-1.5 sm:mt-2 mr-2 sm:mr-3 flex-shrink-0"></div>
+                                        <p class="text-sm sm:text-base text-gray-600">Strengthen community-led climate and environmental action.</p>
                                     </li>
                                     <li class="flex items-start">
-                                        <div class="w-2 h-2 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                                        <p class="text-gray-600">Facilitate access to basic education, sanitation, and dignity for underserved communities.</p>
+                                        <div class="w-2 h-2 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full mt-1.5 sm:mt-2 mr-2 sm:mr-3 flex-shrink-0"></div>
+                                        <p class="text-sm sm:text-base text-gray-600">Facilitate access to basic education, sanitation, and dignity for underserved communities.</p>
                                     </li>
                                 </ul>
                             </div>
                         </div>
 
                         <!-- Core Values Card -->
-                        <div class="lg:col-span-2 group relative">
+                        <div class="md:col-span-2 lg:col-span-2 group relative">
                             <div class="absolute inset-0 bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl opacity-10 group-hover:opacity-20 transition-opacity duration-300"></div>
-                            <div class="relative bg-white rounded-2xl p-8 h-full shadow-lg hover:shadow-2xl transition-all duration-300 border border-teal-100">
-                                <h3 class="text-2xl font-bold text-gray-900 mb-8 text-center">Our Core Values</h3>
-                                <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div class="relative bg-white rounded-xl sm:rounded-2xl p-6 sm:p-8 h-full shadow-lg hover:shadow-2xl transition-all duration-300 border border-teal-100">
+                                <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-6 sm:mb-8 text-center">Our Core Values</h3>
+                                <div class="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
                                     <div class="text-center group/item">
-                                        <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover/item:scale-110 transition-transform duration-300">
-                                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <div class="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-blue-400 to-blue-500 rounded-xl flex items-center justify-center mx-auto mb-2 sm:mb-3 group-hover/item:scale-110 transition-transform duration-300">
+                                            <svg class="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                             </svg>
                                         </div>
-                                        <h4 class="font-bold text-gray-900 mb-1">Sustainability</h4>
-                                        <p class="text-sm text-gray-600">Long-term solutions</p>
+                                        <h4 class="font-bold text-gray-900 mb-1 text-sm sm:text-base">Sustainability</h4>
+                                        <p class="text-xs sm:text-sm text-gray-600">Long-term solutions</p>
                                     </div>
                                     <div class="text-center group/item">
                                         <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-green-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover/item:scale-110 transition-transform duration-300">
