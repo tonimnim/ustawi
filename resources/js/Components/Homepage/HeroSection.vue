@@ -147,20 +147,20 @@ watch(isLoading, (newValue) => {
         <div class="absolute bottom-10 left-10 md:bottom-20 md:left-20 w-24 h-24 md:w-40 md:h-40 bg-blue-400/30 rounded-full blur-xl animate-pulse delay-1000"></div>
         <div class="absolute top-1/2 right-1/4 md:right-1/3 w-16 h-16 md:w-24 md:h-24 bg-teal-300/20 rounded-full blur-2xl animate-pulse delay-500"></div>
         
-        <div class="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 min-h-screen flex items-center py-20 md:py-0">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-24 items-center w-full">
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-screen flex items-center py-20 md:py-24">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center w-full">
                 
                 <!-- Left Content -->
                 <div class="text-white space-y-8">
                     <!-- Badge -->
-                    <div class="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 backdrop-blur-sm rounded-full border border-white/30 lg:-ml-12 text-xs sm:text-sm mx-auto lg:mx-0">
+                    <div class="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 backdrop-blur-sm rounded-full border border-white/30 text-xs sm:text-sm mx-auto lg:mx-0">
                         <span class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
                         <span class="font-medium text-white">Making Impact Since 2024</span>
                     </div>
 
                     <!-- Main Heading -->
                     <div class="space-y-6">
-                        <h1 class="text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight text-center lg:text-left lg:-ml-12">
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight text-center lg:text-left">
                             <span class="block">Empowering</span>
                             <span class="block bg-gradient-to-r from-blue-200 to-sky-100 bg-clip-text text-transparent">
                                 Communities
@@ -168,13 +168,13 @@ watch(isLoading, (newValue) => {
                             <span class="block">Across Kenya</span>
                         </h1>
                         
-                        <p class="text-base sm:text-lg lg:text-2xl text-white/90 leading-relaxed max-w-2xl text-center lg:text-left mx-auto lg:mx-0 lg:-ml-12">
+                        <p class="text-base sm:text-lg lg:text-xl xl:text-2xl text-white/90 leading-relaxed max-w-2xl text-center lg:text-left mx-auto lg:mx-0">
                             Building sustainable futures through youth leadership, innovation, and community-driven development that creates lasting positive change.
                         </p>
                     </div>
 
                     <!-- Stats -->
-                    <div class="grid grid-cols-3 gap-3 sm:gap-6 py-6 sm:py-8 lg:-ml-12">
+                    <div class="grid grid-cols-3 gap-3 sm:gap-6 py-6 sm:py-8">
                         <div class="text-center lg:text-left">
                             <div class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">1,250+</div>
                             <div class="text-xs sm:text-sm text-white/80">Lives Transformed</div>
@@ -190,7 +190,7 @@ watch(isLoading, (newValue) => {
                     </div>
 
                     <!-- Call-to-Action Buttons -->
-                    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 lg:-ml-12">
+                    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4">
                         <Link href="/donate" class="group relative px-6 sm:px-8 py-3 sm:py-4 bg-white text-blue-700 rounded-xl font-semibold text-base sm:text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 inline-block text-center">
                             <span class="relative z-10">Donate Now</span>
                             <div class="absolute inset-0 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -209,7 +209,7 @@ watch(isLoading, (newValue) => {
                     <!-- Image Carousel -->
                     <div 
                         v-if="hasImages" 
-                        class="relative w-full max-w-lg lg:max-w-none lg:w-[200%] lg:-mr-16"
+                        class="relative w-full max-w-lg lg:max-w-xl xl:max-w-2xl"
                         @mouseenter="pauseCarousel"
                         @mouseleave="resumeCarousel"
                     >
@@ -302,8 +302,8 @@ watch(isLoading, (newValue) => {
                         </div>
                         
                         <!-- Floating Decorative Elements -->
-                        <div class="absolute -top-6 -right-6 w-32 h-32 bg-gradient-to-br from-green-400/20 to-teal-400/20 rounded-full blur-2xl animate-pulse"></div>
-                        <div class="absolute -bottom-6 -left-6 w-40 h-40 bg-gradient-to-tr from-blue-400/20 to-indigo-400/20 rounded-full blur-2xl animate-pulse delay-1000"></div>
+                        <div class="absolute -top-6 -right-6 w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-green-400/20 to-teal-400/20 rounded-full blur-2xl animate-pulse"></div>
+                        <div class="absolute -bottom-6 -left-6 w-32 h-32 sm:w-40 sm:h-40 bg-gradient-to-tr from-blue-400/20 to-indigo-400/20 rounded-full blur-2xl animate-pulse delay-1000"></div>
                     </div>
                     
                     <!-- Fallback when no images -->
@@ -325,8 +325,8 @@ watch(isLoading, (newValue) => {
         </div>
         
         <!-- Scroll Indicator -->
-        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/70 animate-bounce">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="absolute bottom-4 sm:bottom-6 lg:bottom-8 left-1/2 transform -translate-x-1/2 text-white/70 animate-bounce">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
             </svg>
         </div>
