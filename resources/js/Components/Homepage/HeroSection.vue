@@ -133,7 +133,7 @@ watch(isLoading, (newValue) => {
 
 <template>
     <!-- Hero Section -->
-    <section class="relative min-h-screen bg-gradient-to-br from-blue-600 via-teal-500 to-green-400 overflow-hidden">
+    <section class="relative h-screen bg-gradient-to-br from-blue-600 via-teal-500 to-green-400 overflow-hidden">
         <!-- Background Pattern -->
         <div class="absolute inset-0 opacity-20">
             <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.4) 1px, transparent 0); background-size: 20px 20px;"></div>
@@ -147,11 +147,11 @@ watch(isLoading, (newValue) => {
         <div class="absolute bottom-10 left-10 md:bottom-20 md:left-20 w-24 h-24 md:w-40 md:h-40 bg-blue-400/30 rounded-full blur-xl animate-pulse delay-1000"></div>
         <div class="absolute top-1/2 right-1/4 md:right-1/3 w-16 h-16 md:w-24 md:h-24 bg-teal-300/20 rounded-full blur-2xl animate-pulse delay-500"></div>
         
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-screen flex items-center py-20 md:py-24">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center w-full">
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center py-16 md:py-20">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8 items-center w-full">
                 
                 <!-- Left Content -->
-                <div class="text-white space-y-8">
+                <div class="text-white space-y-4 sm:space-y-6 lg:space-y-8">
                     <!-- Badge -->
                     <div class="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 backdrop-blur-sm rounded-full border border-white/30 text-xs sm:text-sm mx-auto lg:mx-0">
                         <span class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
@@ -159,8 +159,8 @@ watch(isLoading, (newValue) => {
                     </div>
 
                     <!-- Main Heading -->
-                    <div class="space-y-6">
-                        <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight text-center lg:text-left">
+                    <div class="space-y-3 sm:space-y-4 lg:space-y-6">
+                        <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold leading-tight text-center lg:text-left">
                             <span class="block">Empowering</span>
                             <span class="block bg-gradient-to-r from-blue-200 to-sky-100 bg-clip-text text-transparent">
                                 Communities
@@ -168,13 +168,13 @@ watch(isLoading, (newValue) => {
                             <span class="block">Across Kenya</span>
                         </h1>
                         
-                        <p class="text-base sm:text-lg lg:text-xl xl:text-2xl text-white/90 leading-relaxed max-w-2xl text-center lg:text-left mx-auto lg:mx-0">
+                        <p class="text-sm sm:text-base md:text-lg lg:text-lg xl:text-xl 2xl:text-2xl text-white/90 leading-relaxed max-w-2xl text-center lg:text-left mx-auto lg:mx-0">
                             Building sustainable futures through youth leadership, innovation, and community-driven development that creates lasting positive change.
                         </p>
                     </div>
 
                     <!-- Stats -->
-                    <div class="grid grid-cols-3 gap-3 sm:gap-6 py-6 sm:py-8">
+                    <div class="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6 py-3 sm:py-4 lg:py-6">
                         <div class="text-center lg:text-left">
                             <div class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">1,250+</div>
                             <div class="text-xs sm:text-sm text-white/80">Lives Transformed</div>
@@ -190,7 +190,7 @@ watch(isLoading, (newValue) => {
                     </div>
 
                     <!-- Call-to-Action Buttons -->
-                    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4">
+                    <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 md:gap-4 pt-2 sm:pt-4">
                         <Link href="/donate" class="group relative px-6 sm:px-8 py-3 sm:py-4 bg-white text-blue-700 rounded-xl font-semibold text-base sm:text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 inline-block text-center">
                             <span class="relative z-10">Donate Now</span>
                             <div class="absolute inset-0 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -205,7 +205,7 @@ watch(isLoading, (newValue) => {
                 </div>
 
                 <!-- Right Side - Hero Image/Visual -->
-                <div class="relative lg:h-full flex items-center justify-center lg:justify-end mt-8 lg:mt-0">
+                <div class="relative lg:h-full flex items-center justify-center lg:justify-end mt-4 sm:mt-6 lg:mt-0">
                     <!-- Image Carousel -->
                     <div 
                         v-if="hasImages" 
@@ -224,7 +224,7 @@ watch(isLoading, (newValue) => {
                         <!-- Main Image Container -->
                         <div class="relative rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl group">
                             <!-- Images with slide animation -->
-                            <div class="relative w-full overflow-hidden aspect-[4/3] md:aspect-[16/10] lg:aspect-[3/2]">
+                            <div class="relative w-full overflow-hidden aspect-[4/3] sm:aspect-[16/10] md:aspect-[3/2] lg:aspect-[4/3] xl:aspect-[3/2]">
                                 <div 
                                     v-for="(image, index) in settings.homepage_images"
                                     :key="image.id || index"
@@ -334,6 +334,23 @@ watch(isLoading, (newValue) => {
 </template>
 
 <style scoped>
+/* Responsive height adjustments for smaller screens */
+@media (max-height: 800px) and (min-width: 1024px) {
+    .space-y-8 > :not([hidden]) ~ :not([hidden]) {
+        --tw-space-y-reverse: 0;
+        margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
+        margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
+    }
+}
+
+@media (max-height: 700px) and (min-width: 1024px) {
+    .space-y-8 > :not([hidden]) ~ :not([hidden]) {
+        --tw-space-y-reverse: 0;
+        margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
+        margin-bottom: calc(1rem * var(--tw-space-y-reverse));
+    }
+}
+
 /* Slide animation keyframes */
 @keyframes slideFromRight {
     0% {
