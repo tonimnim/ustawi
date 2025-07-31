@@ -243,23 +243,28 @@ class HomeController extends Controller
         $validated = $request->validate([
             'amount' => 'required|numeric|min:1',
             'frequency' => 'required|in:one-time,monthly',
-            'payment_method' => 'required|in:paypal,card,mpesa,wire',
+            'payment_method' => 'required|in:card,mpesa',
             'project_designation' => 'required|string',
-            'donor_name' => 'required_unless:is_anonymous,true|string|max:255',
-            'donor_email' => 'required_unless:is_anonymous,true|email|max:255',
-            'donor_phone' => 'nullable|string|max:20',
+            'donor_name' => 'required_unless:is_anonymous,true|nullable|string|max:255',
+            'donor_email' => 'required_unless:is_anonymous,true|nullable|email|max:255',
+            'donor_phone' => 'required_if:payment_method,mpesa|nullable|string|max:20',
             'donor_message' => 'nullable|string|max:1000',
             'is_anonymous' => 'boolean',
         ]);
 
+        // Generate unique donation number
+        $donationNumber = 'DON-' . date('Ymd') . '-' . strtoupper(substr(md5(uniqid()), 0, 6));
+        
         // Store the donation record
         $donationId = \DB::table('donations')->insertGetId([
+            'donation_number' => $donationNumber,
             'amount' => $validated['amount'],
+            'currency' => 'KES',
             'frequency' => $validated['frequency'],
             'payment_method' => $validated['payment_method'],
             'project_designation' => $validated['project_designation'],
-            'donor_name' => $validated['is_anonymous'] ? 'Anonymous' : $validated['donor_name'],
-            'donor_email' => $validated['is_anonymous'] ? null : $validated['donor_email'],
+            'donor_name' => ($validated['is_anonymous'] ?? false) ? 'Anonymous' : ($validated['donor_name'] ?? 'Anonymous'),
+            'donor_email' => ($validated['is_anonymous'] ?? false) ? null : ($validated['donor_email'] ?? null),
             'donor_phone' => $validated['donor_phone'],
             'donor_message' => $validated['donor_message'],
             'is_anonymous' => $validated['is_anonymous'] ?? false,
@@ -268,31 +273,8 @@ class HomeController extends Controller
             'updated_at' => now(),
         ]);
 
-        // Handle payment based on method
-        switch ($validated['payment_method']) {
-            case 'mpesa':
-                // TODO: Integrate M-Pesa STK Push
-                return redirect()->route('donate')
-                    ->with('success', 'M-Pesa payment initiated. Please check your phone for the STK push prompt.');
-                
-            case 'paypal':
-                // TODO: Redirect to PayPal
-                return redirect()->route('donate')
-                    ->with('success', 'Redirecting to PayPal...');
-                
-            case 'card':
-                // TODO: Process card payment
-                return redirect()->route('donate')
-                    ->with('success', 'Processing card payment...');
-                
-            case 'wire':
-                return redirect()->route('donate')
-                    ->with('success', 'Thank you! Please complete the wire transfer using the provided bank details.');
-                
-            default:
-                return redirect()->route('donate')
-                    ->with('error', 'Invalid payment method selected.');
-        }
+        // Redirect to Paystack payment controller
+        return redirect()->route('donations.pay', ['donation_id' => $donationId]);
     }
 
     /**
@@ -309,11 +291,11 @@ class HomeController extends Controller
         // Default homepage settings
         $defaults = [
             'organization_name' => 'Ustawi Wa Jamii',
-            'organization_description' => 'Empowering communities through sustainable development and youth leadership across Kenya.',
-            'mission_statement' => 'To empower youth and communities through sustainable development initiatives, capacity building, and innovative solutions that create lasting positive impact across Kenya.',
+            'organization_description' => 'Empowering communities through sustainable development and youth leadership.',
+            'mission_statement' => 'To empower youth and communities through sustainable development initiatives, capacity building, and innovative solutions that create lasting positive impact.',
             'contact_email' => 'info@ustawiwajamii.org',
             'contact_phone' => '+254 700 000 000',
-            'physical_address' => 'Nairobi, Kenya',
+            'physical_address' => 'Nairobi',
             'homepage_images' => [],
             'facebook_url' => '',
             'twitter_url' => '',

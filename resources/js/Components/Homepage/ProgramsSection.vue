@@ -12,12 +12,28 @@ const isPaused = ref(false);
 const carouselPosition = ref(0);
 const animationId = ref(null);
 
+// Toto Smart Move images slideshow
+const totoImages = [
+    'https://res.cloudinary.com/dliqth2su/image/upload/v1753966772/toto3_wlnuxp.jpg',
+    'https://res.cloudinary.com/dliqth2su/image/upload/v1753966772/toto1_rer1px.jpg',
+    'https://res.cloudinary.com/dliqth2su/image/upload/v1753966772/toto2_qxfph0.jpg'
+];
+const currentTotoImageIndex = ref(0);
+
+// Start Toto Smart Move image slideshow
+const startTotoSlideshow = () => {
+    setInterval(() => {
+        currentTotoImageIndex.value = (currentTotoImageIndex.value + 1) % totoImages.length;
+    }, 3000); // Change image every 3 seconds
+};
+
 // Programs data - doubled for seamless loop
 const basePrograms = [
     {
         id: 1,
         title: "Voice of the Silent Workers",
         icon: "🐴",
+        videoUrl: "https://www.youtube.com/embed/6Z-t_zcXKg4?si=CNSy3W6Gw7uAjkrp",
         color: "from-purple-500 to-purple-600",
         bgLight: "from-purple-50 to-purple-100",
         description: "An animal rights initiative advocating for the protection of donkeys and other working animals.",
@@ -27,6 +43,12 @@ const basePrograms = [
         id: 2,
         title: "Community Paralegal Office",
         icon: "⚖️",
+        images: [
+            "/assets/Economic Empowerment & Food Security1.jpeg",
+            "/assets/Economic Empowerment & Food Security2.jpeg",
+            "/assets/Economic Empowerment & Food Security3.jpeg",
+            "/assets/Economic Empowerment & Food Security4.jpeg"
+        ],
         color: "from-blue-500 to-blue-600",
         bgLight: "from-blue-50 to-blue-100",
         description: "Legal awareness and support on land and inheritance rights for women and children.",
@@ -36,6 +58,14 @@ const basePrograms = [
         id: 3,
         title: "Harvest of Tomorrow",
         icon: "🌾",
+        images: [
+            "https://i.imgur.com/WwnRTKy.jpeg",
+            "https://i.imgur.com/kt0PBnb.jpeg",
+            "https://i.imgur.com/JQ1BFn2.jpeg",
+            "https://i.imgur.com/9AGbX9A.jpeg",
+            "https://i.imgur.com/5E4fKAx.jpeg",
+            "https://i.imgur.com/SWmiblK.jpeg"
+        ],
         color: "from-green-500 to-green-600",
         bgLight: "from-green-50 to-green-100",
         description: "Agricultural program using Farmer Field School model for climate-smart farming.",
@@ -45,6 +75,7 @@ const basePrograms = [
         id: 4,
         title: "Toto Smart Move",
         icon: "🚸",
+        image: totoImages[currentTotoImageIndex.value],
         color: "from-orange-500 to-orange-600",
         bgLight: "from-orange-50 to-orange-100",
         description: "Transport safety training for children aged 0-12 years.",
@@ -54,6 +85,7 @@ const basePrograms = [
         id: 5,
         title: "Waste To Art",
         icon: "🎨",
+        image: "https://i.imgur.com/r193IMM.jpeg",
         color: "from-pink-500 to-pink-600",
         bgLight: "from-pink-50 to-pink-100",
         description: "Supporting young creatives in converting waste into art for environmental preservation.",
@@ -63,6 +95,7 @@ const basePrograms = [
         id: 6,
         title: "Sanitary Pad Drives",
         icon: "🌸",
+        image: "https://res.cloudinary.com/dliqth2su/image/upload/v1753993361/Sanitary_Pad_Drives_iuhljw.jpg",
         color: "from-red-500 to-red-600",
         bgLight: "from-red-50 to-red-100",
         description: "Distributing sanitary pads and educating girls on menstrual hygiene.",
@@ -72,6 +105,7 @@ const basePrograms = [
         id: 7,
         title: "Tree Planting Campaigns",
         icon: "🌳",
+        image: "/assets/treeplanting.JPG",
         color: "from-teal-500 to-teal-600",
         bgLight: "from-teal-50 to-teal-100",
         description: "Promoting agroforestry and biodiversity through tree planting initiatives.",
@@ -81,6 +115,7 @@ const basePrograms = [
         id: 8,
         title: "Community Clean-up Campaigns",
         icon: "🧹",
+        image: "/assets/Community Clean-up Campaigns.jpeg",
         color: "from-indigo-500 to-indigo-600",
         bgLight: "from-indigo-50 to-indigo-100",
         description: "Regular clean-up drives in informal settlements and marketplaces.",
@@ -147,6 +182,9 @@ onMounted(() => {
     if (section) {
         observer.observe(section);
     }
+    
+    // Start Toto Smart Move slideshow
+    startTotoSlideshow();
 });
 
 onUnmounted(() => {
@@ -171,37 +209,37 @@ const getProgramSlug = (title) => {
     return slugMap[title] || "";
 };
 
-// County coordinators data
-const coordinators = [
+// Team members data
+const teamMembers = [
     {
-        name: "Stephen Kiarie Kimani",
-        county: "Nairobi",
-        email: "stephenkiarie@ustawiwajamii.org",
-        initials: "SK"
+        name: "Stephen Kiarie",
+        role: "Chairperson & Program Development Lead",
+        initials: "SK",
+        color: "from-purple-500 to-purple-600"
+    },
+    {
+        name: "Tumaini Kimathi Mutei",
+        role: "Lead – Legal Empowerment & Policy Advocacy",
+        initials: "TM",
+        color: "from-blue-500 to-blue-600"
     },
     {
         name: "Raima Kochalle",
-        county: "Marsabit",
-        email: "raima@ustawiwajamii.org",
-        initials: "RK"
+        role: "Lead – Nutrition, Gender & Community Resilience",
+        initials: "RK",
+        color: "from-green-500 to-green-600"
     },
     {
         name: "Ali Omar Dara",
-        county: "Mombasa",
-        email: "ali.dara@ustawiwajamii.org",
-        initials: "AD"
+        role: "Coordinator – Community Engagement & Gender Equity",
+        initials: "AD",
+        color: "from-orange-500 to-orange-600"
     },
     {
-        name: "Tumaini Kimathi",
-        county: "Kirinyaga",
-        email: "tumaini@ustawiwajamii.org",
-        initials: "TK"
-    },
-    {
-        name: "Kelvin Limasia Rotich",
-        county: "West Pokot",
-        email: "kelvin@ustawiwajamii.org",
-        initials: "KR"
+        name: "Kelvin Jacob Limasia Rotich",
+        role: "Data & Social Impact Lead",
+        initials: "KR",
+        color: "from-teal-500 to-teal-600"
     }
 ];
 </script>
@@ -251,15 +289,45 @@ const coordinators = [
                                 >
                                 <!-- Card -->
                                 <div class="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 h-full overflow-hidden group-hover:scale-105">
-                                    <!-- Background gradient -->
-                                    <div :class="`absolute inset-0 bg-gradient-to-br ${program.bgLight} opacity-50`"></div>
+                                    <!-- Program Image -->
+                                    <div class="relative h-48 overflow-hidden">
+                                        <!-- Single Image -->
+                                        <img 
+                                            v-if="program.image"
+                                            :src="program.image" 
+                                            :alt="program.title"
+                                            class="w-full h-full object-cover"
+                                        />
+                                        <!-- Multiple Images (for programs with image arrays) -->
+                                        <img 
+                                            v-else-if="program.images && program.images.length > 0"
+                                            :src="program.images[0]" 
+                                            :alt="program.title"
+                                            class="w-full h-full object-cover"
+                                        />
+                                        <!-- Toto Smart Move Slideshow -->
+                                        <div v-else-if="program.title === 'Toto Smart Move'">
+                                            <img 
+                                                v-for="(image, imgIndex) in totoImages" 
+                                                :key="imgIndex"
+                                                :src="image" 
+                                                :alt="`Toto Smart Move ${imgIndex + 1}`"
+                                                class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
+                                                :class="{ 'opacity-100': currentTotoImageIndex === imgIndex, 'opacity-0': currentTotoImageIndex !== imgIndex }"
+                                            />
+                                        </div>
+                                        <!-- Video Preview for Voice of Silent Workers -->
+                                        <div v-else-if="program.videoUrl" class="w-full h-full bg-purple-100 flex items-center justify-center">
+                                            <div class="text-center">
+                                                <span class="text-4xl">🎥</span>
+                                                <p class="text-sm mt-2 text-gray-600">Video Available</p>
+                                            </div>
+                                        </div>
+                                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                                    </div>
                                     
                                     <!-- Content -->
                                     <div class="relative p-8">
-                                        <!-- Icon -->
-                                        <div class="text-5xl mb-4 transform group-hover:scale-110 transition-transform duration-300">
-                                            {{ program.icon }}
-                                        </div>
                                         
                                         <!-- Title -->
                                         <h3 class="text-xl font-bold text-gray-900 mb-3">
@@ -296,18 +364,18 @@ const coordinators = [
                 </div>
             </div>
 
-            <!-- County Coordinators Section -->
+            <!-- Team Leadership Section -->
             <div class="max-w-7xl mx-auto px-6 lg:px-8 mt-32">
                 <div class="text-center mb-16" :class="{ 'opacity-0 -translate-y-10': !isVisible, 'opacity-100 translate-y-0 transition-all duration-1000 delay-700': isVisible }">
-                    <span class="inline-block text-4xl mb-6">🗺️</span>
-                    <h3 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">County Project Coordinators</h3>
-                    <p class="text-xl text-gray-600">Our dedicated team leaders across Kenya</p>
+                    <span class="inline-block text-4xl mb-6">👥</span>
+                    <h3 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">Our Leadership Team</h3>
+                    <p class="text-xl text-gray-600">Meet the dedicated leaders driving our mission forward</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <div 
-                        v-for="(coordinator, index) in coordinators" 
-                        :key="coordinator.email"
+                        v-for="(member, index) in teamMembers" 
+                        :key="member.name"
                         class="group"
                         :class="{ 
                             'opacity-0 translate-y-10': !isVisible, 
@@ -315,39 +383,19 @@ const coordinators = [
                         }"
                         :style="{ transitionDelay: `${index * 100 + 800}ms` }"
                     >
-                        <div class="bg-gradient-to-br from-gray-50 to-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 p-10 group-hover:-translate-y-2 border border-gray-100">
-                            <div class="flex items-center mb-8">
-                                <!-- Profile Picture -->
-                                <div class="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center text-white text-3xl font-bold mr-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                                    {{ coordinator.initials }}
-                                </div>
-                                <div>
-                                    <h4 class="text-2xl font-bold text-gray-900">{{ coordinator.name }}</h4>
-                                    <p class="text-blue-600 font-semibold text-lg">{{ coordinator.county }} County</p>
+                        <div class="bg-gradient-to-br from-gray-50 to-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 p-8 group-hover:-translate-y-2 border border-gray-100 h-full flex flex-col">
+                            <!-- Profile Picture -->
+                            <div class="flex justify-center mb-6">
+                                <div :class="`w-20 h-20 bg-gradient-to-br ${member.color} rounded-full flex items-center justify-center text-white text-2xl font-bold group-hover:scale-110 transition-transform duration-300 shadow-lg`">
+                                    {{ member.initials }}
                                 </div>
                             </div>
                             
-                            <div class="space-y-4">
-                                <div class="flex items-center text-gray-600">
-                                    <svg class="w-6 h-6 mr-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                    </svg>
-                                    <a :href="`mailto:${coordinator.email}`" class="hover:text-blue-600 transition-colors duration-300">
-                                        {{ coordinator.email }}
-                                    </a>
-                                </div>
-                                <div class="flex items-center text-gray-600">
-                                    <svg class="w-6 h-6 mr-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                    <span>{{ coordinator.county }}, Kenya</span>
-                                </div>
+                            <!-- Name and Role -->
+                            <div class="text-center flex-1">
+                                <h4 class="text-xl font-bold text-gray-900 mb-2">{{ member.name }}</h4>
+                                <p class="text-gray-600 text-sm leading-relaxed">{{ member.role }}</p>
                             </div>
-
-                            <button class="mt-8 w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-4 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300">
-                                Contact Coordinator
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -359,7 +407,7 @@ const coordinators = [
                     <div class="absolute inset-0 bg-black/10"></div>
                     <div class="relative z-10 text-center">
                         <h3 class="text-4xl font-bold mb-6">Want to Support Our Programs?</h3>
-                        <p class="text-2xl mb-10 text-white/90">Join us in creating lasting impact in communities across Kenya</p>
+                        <p class="text-2xl mb-10 text-white/90">Join us in creating lasting impact in communities worldwide</p>
                         <div class="flex flex-col sm:flex-row gap-6 justify-center">
                             <Link 
                                 href="/donate"

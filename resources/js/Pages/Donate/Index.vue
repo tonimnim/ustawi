@@ -16,7 +16,7 @@ const form = useForm({
     amount: '',
     custom_amount: '',
     frequency: 'one-time', // 'one-time' or 'monthly'
-    payment_method: '', // 'paypal', 'card', 'mpesa', 'wire'
+    payment_method: '', // 'card', 'mpesa'
     project_designation: 'where-needed-most',
     donor_name: '',
     donor_email: '',
@@ -74,7 +74,7 @@ const paymentMethods = [
     {
         id: 'mpesa',
         name: 'M-Pesa',
-        description: 'Pay via M-Pesa Paybill or STK Push',
+        description: 'Pay via M-Pesa mobile money',
         icon: '/assets/icons8-mpesa.svg',
         color: 'bg-green-100'
     },
@@ -84,37 +84,10 @@ const paymentMethods = [
         description: 'Pay with Visa or Mastercard',
         icon: '/assets/icons8-debit-card-50.png',
         color: 'bg-blue-100'
-    },
-    {
-        id: 'paypal',
-        name: 'PayPal',
-        description: 'Secure payment via PayPal',
-        icon: '/assets/icons8-paypal.svg',
-        color: 'bg-indigo-100'
-    },
-    {
-        id: 'wire',
-        name: 'Wire Transfer',
-        description: 'Direct bank transfer',
-        icon: '/assets/wiretransfer.jpg',
-        color: 'bg-gray-100'
     }
 ];
 
-// Wire transfer details
-const wireTransferDetails = {
-    bank_name: 'Kenya Commercial Bank',
-    account_name: 'Ustawi Wa Jamii',
-    account_number: '1234567890',
-    branch: 'Nairobi Main Branch',
-    swift_code: 'KCBLKENX'
-};
 
-// M-Pesa details
-const mpesaDetails = {
-    paybill: '123456',
-    account_name: 'Ustawi Wa Jamii'
-};
 
 // Submit donation
 const submitDonation = () => {
@@ -129,29 +102,74 @@ const submitDonation = () => {
         return;
     }
 
+    // Minimum amount check
+    if (parseFloat(form.amount) < 50) {
+        alert('Minimum donation amount is KES 50');
+        return;
+    }
+
     // Validate payment method
     if (!form.payment_method) {
         alert('Please select a payment method');
         return;
     }
-
-    // Submit based on payment method
-    if (form.payment_method === 'wire') {
-        // For wire transfer, just show the details
-        alert('Wire transfer details will be shown. Please make the transfer using the provided details.');
-        // In real implementation, you might want to save this as a pending donation
-    } else {
-        // For other methods, submit to backend
-        form.post(route('donate.process'), {
-            onSuccess: () => {
-                // Handle success based on payment method
-                console.log('Donation submitted successfully');
-            },
-            onError: (errors) => {
-                console.error('Error submitting donation:', errors);
-            }
-        });
+    
+    // Validate phone number for M-Pesa
+    if (form.payment_method === 'mpesa' && !form.donor_phone) {
+        alert('Phone number is required for M-Pesa payments');
+        return;
     }
+    
+    // Validate non-anonymous donations
+    if (!form.is_anonymous) {
+        if (!form.donor_name || form.donor_name.trim() === '') {
+            alert('Please enter your name or choose to donate anonymously');
+            return;
+        }
+        if (!form.donor_email || form.donor_email.trim() === '') {
+            alert('Please enter your email or choose to donate anonymously');
+            return;
+        }
+    }
+    
+    // Set default values for anonymous donations
+    if (form.is_anonymous) {
+        form.donor_name = 'Anonymous';
+        form.donor_email = 'anonymous@donation.com';
+    }
+
+    // Log form data for debugging
+    console.log('Submitting donation with data:', {
+        amount: form.amount,
+        payment_method: form.payment_method,
+        frequency: form.frequency,
+        is_anonymous: form.is_anonymous,
+        donor_name: form.donor_name,
+        donor_email: form.donor_email,
+        donor_phone: form.donor_phone
+    });
+
+    // Submit to backend for payment processing
+    form.post(route('donate.process'), {
+        onSuccess: () => {
+            // Payment will be processed via Paystack
+            console.log('Donation submitted successfully, redirecting to payment...');
+        },
+        onError: (errors) => {
+            console.error('Error submitting donation:', errors);
+            if (errors.donor_name) {
+                alert('Name error: ' + errors.donor_name);
+            } else if (errors.donor_email) {
+                alert('Email error: ' + errors.donor_email);
+            } else if (errors.payment_method) {
+                alert('Payment method error: ' + errors.payment_method);
+            } else if (errors.amount) {
+                alert('Amount error: ' + errors.amount);
+            } else {
+                alert('Error processing donation. Please check all fields and try again.');
+            }
+        }
+    });
 };
 </script>
 
@@ -165,23 +183,27 @@ const submitDonation = () => {
                 <h1 class="text-4xl lg:text-5xl font-bold text-center mb-6">Make a Difference Today</h1>
                 <p class="text-xl text-center max-w-3xl mx-auto">
                     Your generous donation helps us empower communities, support youth development, 
-                    and create sustainable change across Kenya.
+                    and create sustainable change.
                 </p>
             </div>
         </section>
 
         <!-- Donation Form Section -->
         <section class="py-20 bg-gray-50">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <!-- Success/Error Messages -->
-                <div v-if="$page.props.flash?.success" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-8 rounded-lg">
+                <div v-if="$page.props.flash?.success" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-8 rounded-lg max-w-4xl">
                     <p class="font-medium">{{ $page.props.flash.success }}</p>
                 </div>
-                <div v-if="$page.props.flash?.error" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-8 rounded-lg">
+                <div v-if="$page.props.flash?.error" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-8 rounded-lg max-w-4xl">
                     <p class="font-medium">{{ $page.props.flash.error }}</p>
                 </div>
-                <!-- Donation Type Selection -->
-                <div class="bg-white rounded-2xl shadow-xl p-8 mb-8">
+                
+                <!-- Main Layout Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Left Side - Donation Type Selection (2 columns) -->
+                    <div class="lg:col-span-2">
+                        <div class="bg-white rounded-2xl shadow-xl p-6">
                     <h2 class="text-2xl font-bold text-gray-900 mb-6">Choose Your Donation Type</h2>
                     
                     <div class="grid md:grid-cols-2 gap-4 mb-8">
@@ -273,65 +295,50 @@ const submitDonation = () => {
                             </option>
                         </select>
                     </div>
-                </div>
-
-                <!-- Payment Method Selection -->
-                <div class="bg-white rounded-2xl shadow-xl p-8 mb-8">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Select Payment Method</h2>
+                        </div>
+                    </div>
                     
-                    <div class="grid md:grid-cols-2 gap-4">
-                        <button
-                            v-for="method in paymentMethods"
-                            :key="method.id"
-                            @click="form.payment_method = method.id"
-                            :class="[
-                                'p-6 rounded-lg border-2 transition-all duration-300 text-left',
-                                form.payment_method === method.id 
-                                    ? 'border-orange-500 bg-orange-50' 
-                                    : 'border-gray-300 hover:border-gray-400'
-                            ]"
-                        >
-                            <div class="flex items-start space-x-4">
-                                <div :class="[method.color, 'p-3 rounded-lg flex items-center justify-center']">
-                                    <img :src="method.icon" :alt="method.name" class="h-8 w-8 object-contain" />
-                                </div>
-                                <div class="flex-1">
-                                    <h4 class="font-semibold text-lg">{{ method.name }}</h4>
-                                    <p class="text-sm text-gray-600 mt-1">{{ method.description }}</p>
-                                </div>
+                    <!-- Right Side - Payment Method Selection (1 column) -->
+                    <div class="lg:col-span-1">
+                        <div class="bg-white rounded-2xl shadow-xl p-6 sticky top-4">
+                            <h2 class="text-xl font-bold text-gray-900 mb-4">Payment Method</h2>
+                            
+                            <div class="space-y-3">
+                                <button
+                                    v-for="method in paymentMethods"
+                                    :key="method.id"
+                                    @click="form.payment_method = method.id"
+                                    :class="[
+                                        'w-full p-4 rounded-lg border-2 transition-all duration-300 text-left',
+                                        form.payment_method === method.id 
+                                            ? 'border-orange-500 bg-orange-50' 
+                                            : 'border-gray-300 hover:border-gray-400'
+                                    ]"
+                                >
+                                    <div class="flex items-center space-x-3">
+                                        <div :class="[method.color, 'p-2 rounded-lg flex items-center justify-center']">
+                                            <img :src="method.icon" :alt="method.name" class="h-6 w-6 object-contain" />
+                                        </div>
+                                        <div class="flex-1">
+                                            <h4 class="font-semibold">{{ method.name }}</h4>
+                                            <p class="text-xs text-gray-600">{{ method.description }}</p>
+                                        </div>
+                                    </div>
+                                </button>
                             </div>
-                        </button>
-                    </div>
 
-                    <!-- Payment Method Details -->
-                    <div v-if="form.payment_method === 'wire'" class="mt-6 p-6 bg-gray-100 rounded-lg">
-                        <h4 class="font-semibold text-lg mb-4">Wire Transfer Details</h4>
-                        <div class="space-y-2 text-sm">
-                            <p><strong>Bank Name:</strong> {{ wireTransferDetails.bank_name }}</p>
-                            <p><strong>Account Name:</strong> {{ wireTransferDetails.account_name }}</p>
-                            <p><strong>Account Number:</strong> {{ wireTransferDetails.account_number }}</p>
-                            <p><strong>Branch:</strong> {{ wireTransferDetails.branch }}</p>
-                            <p><strong>SWIFT Code:</strong> {{ wireTransferDetails.swift_code }}</p>
+                            <!-- Payment Method Info -->
+                            <div v-if="form.payment_method === 'card'" class="mt-4 p-4 bg-blue-50 rounded-lg">
+                                <p class="text-xs text-gray-600">
+                                    You'll be redirected to a secure payment page.
+                                </p>
+                            </div>
                         </div>
-                        <p class="mt-4 text-sm text-gray-600">
-                            Please use your name as the reference when making the transfer.
-                        </p>
-                    </div>
-
-                    <div v-if="form.payment_method === 'mpesa'" class="mt-6 p-6 bg-gray-100 rounded-lg">
-                        <h4 class="font-semibold text-lg mb-4">M-Pesa Payment</h4>
-                        <div class="space-y-2 text-sm">
-                            <p><strong>Paybill Number:</strong> {{ mpesaDetails.paybill }}</p>
-                            <p><strong>Account Name:</strong> {{ mpesaDetails.account_name }}</p>
-                        </div>
-                        <p class="mt-4 text-sm text-gray-600">
-                            You can also use STK Push for instant payment. Click continue to proceed.
-                        </p>
                     </div>
                 </div>
 
                 <!-- Donor Information -->
-                <div class="bg-white rounded-2xl shadow-xl p-8 mb-8">
+                <div class="bg-white rounded-2xl shadow-xl p-8 mb-8 mt-8 max-w-4xl">
                     <h2 class="text-2xl font-bold text-gray-900 mb-6">Your Information</h2>
                     
                     <div class="space-y-6">
@@ -374,19 +381,34 @@ const submitDonation = () => {
                                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                                 />
                             </div>
+                        </div>
 
-                            <div class="md:col-span-2">
-                                <label for="donor_phone" class="block text-sm font-medium text-gray-700 mb-2">
-                                    Phone Number (Optional)
-                                </label>
-                                <input
-                                    id="donor_phone"
-                                    v-model="form.donor_phone"
-                                    type="tel"
-                                    placeholder="+254 700 000 000"
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                                />
-                            </div>
+                        <!-- Phone Number Field - Always visible when M-Pesa is selected -->
+                        <div v-if="!form.is_anonymous || form.payment_method === 'mpesa'" 
+                             :class="[
+                                 'mt-6',
+                                 form.payment_method === 'mpesa' ? 'p-4 bg-green-50 rounded-lg border-2 border-green-300' : ''
+                             ]">
+                            <label for="donor_phone" class="block text-sm font-medium mb-2"
+                                   :class="form.payment_method === 'mpesa' ? 'text-green-800' : 'text-gray-700'">
+                                Phone Number {{ form.payment_method === 'mpesa' ? '(Required for M-Pesa)' : '(Optional)' }} {{ form.payment_method === 'mpesa' ? '*' : '' }}
+                            </label>
+                            <input
+                                id="donor_phone"
+                                v-model="form.donor_phone"
+                                type="tel"
+                                :required="form.payment_method === 'mpesa'"
+                                placeholder="0700000000"
+                                :class="[
+                                    'w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent',
+                                    form.payment_method === 'mpesa' 
+                                        ? 'border-green-400 focus:ring-green-500' 
+                                        : 'border-gray-300 focus:ring-orange-500'
+                                ]"
+                            />
+                            <p v-if="form.payment_method === 'mpesa'" class="mt-1 text-sm text-green-700 font-medium">
+                                Enter your M-Pesa registered phone number (e.g., 0700000000)
+                            </p>
                         </div>
 
                         <div>
@@ -404,35 +426,8 @@ const submitDonation = () => {
                     </div>
                 </div>
 
-                <!-- Donation Summary -->
-                <div class="bg-orange-50 rounded-2xl p-8 mb-8">
-                    <h3 class="text-xl font-bold text-gray-900 mb-4">Donation Summary</h3>
-                    <div class="space-y-3">
-                        <div class="flex justify-between">
-                            <span class="text-gray-700">Donation Amount:</span>
-                            <span class="font-semibold">KES {{ actualAmount.toLocaleString() }}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-700">Frequency:</span>
-                            <span class="font-semibold">{{ form.frequency === 'monthly' ? 'Monthly' : 'One-Time' }}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-700">Designation:</span>
-                            <span class="font-semibold">
-                                {{ projectOptions.find(p => p.value === form.project_designation)?.label }}
-                            </span>
-                        </div>
-                        <div v-if="form.payment_method" class="flex justify-between">
-                            <span class="text-gray-700">Payment Method:</span>
-                            <span class="font-semibold">
-                                {{ paymentMethods.find(m => m.id === form.payment_method)?.name }}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Submit Button -->
-                <div class="text-center">
+                <div class="text-center max-w-4xl">
                     <button
                         @click="submitDonation"
                         :disabled="!actualAmount || !form.payment_method || form.processing"

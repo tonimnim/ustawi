@@ -55,7 +55,7 @@ onUnmounted(() => {
                         </span>
                     </h2>
                     <div class="max-w-3xl mx-auto">
-                        <p class="text-base sm:text-lg lg:text-xl text-gray-600 px-2 sm:px-0">We are a community-driven organization dedicated to creating sustainable development and empowering youth across Kenya through innovative programs and collective action.</p>
+                        <p class="text-base sm:text-lg lg:text-xl text-gray-600 px-2 sm:px-0">We are a community-driven organization dedicated to creating sustainable development and empowering youth through innovative programs and collective action.</p>
                     </div>
                 </div>
 
@@ -92,7 +92,7 @@ onUnmounted(() => {
                                     </div>
                                     <h3 class="text-xl sm:text-2xl font-bold text-gray-900 ml-3 sm:ml-4">Our Vision</h3>
                                 </div>
-                                <p class="text-sm sm:text-base text-gray-600 leading-relaxed">A Kenya where every community has access to sustainable development opportunities, where youth are empowered as leaders of change, and where collective action creates lasting positive impact for generations to come.</p>
+                                <p class="text-sm sm:text-base text-gray-600 leading-relaxed">A world where every community has access to sustainable development opportunities, where youth are empowered as leaders of change, and where collective action creates lasting positive impact for generations to come.</p>
                             </div>
                         </div>
 

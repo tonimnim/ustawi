@@ -10,7 +10,7 @@ const involvementOptions = [
     {
         title: "Volunteer",
         icon: "🙋‍♀️",
-        description: "Join our team of dedicated volunteers making a difference in communities across Kenya",
+        description: "Join our team of dedicated volunteers making a difference in communities worldwide",
         action: "Sign Up to Volunteer",
         link: "/contact"
     },

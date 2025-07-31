@@ -76,14 +76,6 @@ onUnmounted(() => {
                                 <span class="hidden sm:inline">{{ settings.organization_name }}</span>
                                 <span class="sm:hidden">Ustawi Wa Jamii</span>
                             </h1>
-                            <p 
-                                :class="[
-                                    'text-xs sm:text-sm transition-colors duration-300',
-                                    isScrolled ? 'text-gray-600' : 'text-white/90'
-                                ]"
-                            >
-                                Est. 2024
-                            </p>
                         </div>
                     </div>
 
@@ -193,11 +185,10 @@ onUnmounted(() => {
                                 <h1 class="text-lg font-bold text-white">
                                     {{ settings.organization_name }}
                                 </h1>
-                                <p class="text-gray-400 text-xs">Est. 2024</p>
                             </div>
                         </div>
                         <p class="text-gray-300 text-sm mb-4">
-                            Empowering communities through sustainable development and youth leadership across Kenya.
+                            Empowering communities through sustainable development and youth leadership.
                         </p>
                         <!-- Social Media Icons -->
                         <div class="flex space-x-3">

@@ -39,7 +39,7 @@ class AdminProfileController extends Controller
                 'total_donations' => $user->isUser() ? $user->total_donated : null,
                 'last_donation' => $user->isUser() ? $user->last_donation?->created_at?->format('M d, Y') : null,
             ],
-            'counties' => $this->getKenyanCounties(),
+            'counties' => $this->getCounties(),
         ]);
     }
 
@@ -65,7 +65,7 @@ class AdminProfileController extends Controller
                 'sms_notifications' => $user->sms_notifications,
                 'preferred_causes' => $user->preferred_causes ?? [],
             ],
-            'counties' => $this->getKenyanCounties(),
+            'counties' => $this->getCounties(),
             'causes' => $this->getAvailableCauses(),
         ]);
     }
@@ -139,21 +139,14 @@ class AdminProfileController extends Controller
     }
 
     /**
-     * Get Kenyan counties for dropdown.
+     * Get locations for dropdown.
      */
-    private function getKenyanCounties(): array
+    private function getCounties(): array
     {
+        // Return a generic list of locations instead of Kenya-specific counties
         return [
-            'Baringo', 'Bomet', 'Bungoma', 'Busia', 'Elgeyo-Marakwet',
-            'Embu', 'Garissa', 'Homa Bay', 'Isiolo', 'Kajiado',
-            'Kakamega', 'Kericho', 'Kiambu', 'Kilifi', 'Kirinyaga',
-            'Kisii', 'Kisumu', 'Kitui', 'Kwale', 'Laikipia',
-            'Lamu', 'Machakos', 'Makueni', 'Mandera', 'Marsabit',
-            'Meru', 'Migori', 'Mombasa', 'Murang\'a', 'Nairobi',
-            'Nakuru', 'Nandi', 'Narok', 'Nyamira', 'Nyandarua',
-            'Nyeri', 'Samburu', 'Siaya', 'Taita-Taveta', 'Tana River',
-            'Tharaka-Nithi', 'Trans Nzoia', 'Turkana', 'Uasin Gishu',
-            'Vihiga', 'Wajir', 'West Pokot'
+            'Africa', 'Asia', 'Europe', 'North America', 'South America',
+            'Australia', 'Middle East', 'Remote/Online'
         ];
     }
 

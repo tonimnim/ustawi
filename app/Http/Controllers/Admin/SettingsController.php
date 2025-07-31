@@ -19,7 +19,7 @@ class SettingsController extends Controller
         
         return Inertia::render('Admin/Settings/Index', [
             'settings' => $settings,
-            'counties' => $this->getKenyanCounties(),
+            'counties' => $this->getCounties(),
         ]);
     }
 
@@ -269,11 +269,11 @@ class SettingsController extends Controller
         // Default settings with database overrides
         $defaults = [
             'organization_name' => 'Ustawi Wa Jamii',
-            'organization_description' => 'Empowering communities through sustainable development and youth leadership across Kenya.',
+            'organization_description' => 'Empowering communities through sustainable development and youth leadership.',
             'contact_email' => 'info@ustawiwajamii.org',
             'contact_phone' => '+254 700 000 000',
-            'physical_address' => 'Nairobi, Kenya',
-            'mission_statement' => 'To empower youth and communities through sustainable development initiatives, capacity building, and innovative solutions that create lasting positive impact across Kenya.',
+            'physical_address' => 'Nairobi',
+            'mission_statement' => 'To empower youth and communities through sustainable development initiatives, capacity building, and innovative solutions that create lasting positive impact.',
             'mpesa_paybill' => '',
             'default_amounts' => [500, 1000, 2500, 5000],
             'receipt_email_template' => "Dear {donor_name},\n\nThank you for your generous donation of KES {amount} to Ustawi Wa Jamii.\n\nYour support helps us continue our mission of empowering communities through sustainable development.\n\nBest regards,\nUstawi Wa Jamii Team",
@@ -380,19 +380,14 @@ class SettingsController extends Controller
     }
 
     /**
-     * Get list of Kenyan counties.
+     * Get list of locations.
      */
-    private function getKenyanCounties(): array
+    private function getCounties(): array
     {
+        // Return a generic list of locations instead of Kenya-specific counties
         return [
-            'Baringo', 'Bomet', 'Bungoma', 'Busia', 'Elgeyo-Marakwet', 'Embu',
-            'Garissa', 'Homa Bay', 'Isiolo', 'Kajiado', 'Kakamega', 'Kericho',
-            'Kiambu', 'Kilifi', 'Kirinyaga', 'Kisii', 'Kisumu', 'Kitui',
-            'Kwale', 'Laikipia', 'Lamu', 'Machakos', 'Makueni', 'Mandera',
-            'Marsabit', 'Meru', 'Migori', 'Mombasa', 'Murang\'a', 'Nairobi',
-            'Nakuru', 'Nandi', 'Narok', 'Nyamira', 'Nyandarua', 'Nyeri',
-            'Samburu', 'Siaya', 'Taita-Taveta', 'Tana River', 'Tharaka-Nithi',
-            'Trans Nzoia', 'Turkana', 'Uasin Gishu', 'Vihiga', 'Wajir', 'West Pokot'
+            'Africa', 'Asia', 'Europe', 'North America', 'South America',
+            'Australia', 'Middle East', 'Remote/Online'
         ];
     }
 }

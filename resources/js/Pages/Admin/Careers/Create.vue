@@ -149,7 +149,7 @@ const submit = () => {
                                         required
                                         class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                         :class="{ 'border-red-500': form.errors.location }"
-                                        placeholder="e.g., Nairobi, Kenya"
+                                        placeholder="e.g., Nairobi"
                                     />
                                     <p v-if="form.errors.location" class="mt-1 text-sm text-red-600">{{ form.errors.location }}</p>
                                 </div>

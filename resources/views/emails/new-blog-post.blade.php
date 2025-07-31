@@ -114,7 +114,7 @@
                 </p>
             @endif
 
-            <p>Thank you for your continued interest in our work. Your support helps us make a lasting impact in communities across Kenya.</p>
+            <p>Thank you for your continued interest in our work. Your support helps us make a lasting impact in communities.</p>
             
             <p>Stay connected with us to receive updates about our programs, success stories, and ways you can make a difference.</p>
         </div>
@@ -122,7 +122,7 @@
         <div class="footer">
             <p>
                 <strong>Ustawi Wa Jamii</strong><br>
-                Nairobi, Kenya<br>
+                Nairobi<br>
                 <a href="{{ url('/') }}" style="color: #3b82f6;">www.ustawiwajamii.org</a>
             </p>
             

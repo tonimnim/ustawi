@@ -141,7 +141,7 @@ onUnmounted(() => {
                         </div>
                         <div class="text-4xl lg:text-5xl font-bold text-white mb-3">{{ counters.counties }}</div>
                         <div class="text-white text-lg font-semibold mb-1">Counties Reached</div>
-                        <div class="text-white/80 text-sm">Across Kenya</div>
+                        <div class="text-white/80 text-sm">Locations Reached</div>
                     </div>
                 </div>
 
@@ -207,7 +207,7 @@ onUnmounted(() => {
             <div class="text-center">
                 <div class="bg-gradient-to-r from-sky-500 to-sky-600 rounded-xl sm:rounded-2xl p-8 sm:p-10 lg:p-12 text-white">
                     <h3 class="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Be Part of the Change</h3>
-                    <p class="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 opacity-90 px-4 sm:px-0">Join us in creating sustainable impact in communities across Kenya</p>
+                    <p class="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 opacity-90 px-4 sm:px-0">Join us in creating sustainable impact in communities worldwide</p>
                     <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                         <Link href="/donate" class="bg-white text-sky-600 px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 inline-block text-center text-sm sm:text-base">
                             Donate Now

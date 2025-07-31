@@ -98,7 +98,7 @@ const getTypeBadgeColor = (type) => {
                 <div class="text-center">
                     <h1 class="text-4xl lg:text-5xl font-bold mb-6">Join Our Team</h1>
                     <p class="text-xl text-blue-100 max-w-3xl mx-auto">
-                        Be part of our mission to empower communities and create lasting positive change across Kenya
+                        Be part of our mission to empower communities and create lasting positive change
                     </p>
                 </div>
             </div>

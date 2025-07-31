@@ -129,7 +129,7 @@ class UsersController extends Controller
                 'organization' => $user->organization,
                 'is_active' => $user->is_active,
             ],
-            'counties' => $this->getKenyanCounties(),
+            'counties' => $this->getCounties(),
             'roles' => ['user', 'admin'],
         ]);
     }
@@ -207,19 +207,14 @@ class UsersController extends Controller
     }
     
     /**
-     * Get list of Kenyan counties.
+     * Get list of locations.
      */
-    private function getKenyanCounties(): array
+    private function getCounties(): array
     {
+        // Return a generic list of locations instead of Kenya-specific counties
         return [
-            'Baringo', 'Bomet', 'Bungoma', 'Busia', 'Elgeyo-Marakwet', 'Embu',
-            'Garissa', 'Homa Bay', 'Isiolo', 'Kajiado', 'Kakamega', 'Kericho',
-            'Kiambu', 'Kilifi', 'Kirinyaga', 'Kisii', 'Kisumu', 'Kitui',
-            'Kwale', 'Laikipia', 'Lamu', 'Machakos', 'Makueni', 'Mandera',
-            'Marsabit', 'Meru', 'Migori', 'Mombasa', 'Murang\'a', 'Nairobi',
-            'Nakuru', 'Nandi', 'Narok', 'Nyamira', 'Nyandarua', 'Nyeri',
-            'Samburu', 'Siaya', 'Taita-Taveta', 'Tana River', 'Tharaka-Nithi',
-            'Trans Nzoia', 'Turkana', 'Uasin Gishu', 'Vihiga', 'Wajir', 'West Pokot'
+            'Africa', 'Asia', 'Europe', 'North America', 'South America',
+            'Australia', 'Middle East', 'Remote/Online'
         ];
     }
 }

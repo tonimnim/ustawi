@@ -112,7 +112,7 @@ onUnmounted(() => {
                     Success Stories
                 </h2>
                 <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                    Real impact, real people, real change. These are the stories of transformation from communities across Kenya.
+                    Real impact, real people, real change. These are the stories of transformation from communities worldwide.
                 </p>
             </div>
         </div>

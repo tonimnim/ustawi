@@ -15,6 +15,11 @@ Route::post('/contact', [HomeController::class, 'submitContact'])->name('contact
 Route::get('/donate', [HomeController::class, 'donate'])->name('donate');
 Route::post('/donate', [HomeController::class, 'processDonation'])->name('donate.process');
 
+// Paystack payment routes
+Route::get('/donations/pay/{donation_id}', [\App\Http\Controllers\PaystackController::class, 'initializePayment'])->name('donations.pay');
+Route::get('/donations/callback', [\App\Http\Controllers\PaystackController::class, 'handleCallback'])->name('donations.callback');
+Route::post('/paystack/webhook', [\App\Http\Controllers\PaystackController::class, 'webhook'])->name('paystack.webhook');
+
 // Blog routes
 Route::get('/blog', [HomeController::class, 'blog'])->name('blog');
 Route::get('/blog/{slug}', [HomeController::class, 'blogPost'])->name('blog.show');

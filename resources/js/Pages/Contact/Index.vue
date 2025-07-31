@@ -66,7 +66,7 @@ const submit = () => {
                         <p class="text-gray-600 mb-8">
                             Ustawi Wa Jamii is committed to empowering communities through sustainable 
                             development and youth leadership. We work side by side with communities to 
-                            create lasting positive change across Kenya.
+                            create lasting positive change.
                         </p>
 
                         <div class="space-y-6">
@@ -82,7 +82,7 @@ const submit = () => {
                                 </div>
                                 <div>
                                     <h3 class="text-lg font-semibold text-gray-900">Office Location</h3>
-                                    <p class="text-gray-600">{{ settings.physical_address || 'Nairobi, Kenya' }}</p>
+                                    <p class="text-gray-600">{{ settings.physical_address || 'Nairobi' }}</p>
                                 </div>
                             </div>
 

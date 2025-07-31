@@ -73,7 +73,7 @@ const categories = {
                     "Community art exhibitions",
                     "Marketing support for eco-artists"
                 ],
-                image: null
+                image: "https://i.imgur.com/r193IMM.jpeg"
             },
             {
                 id: 'community-cleanup',
@@ -111,7 +111,7 @@ const categories = {
                     "Advocacy for animal protection laws"
                 ],
                 image: null,
-                videoUrl: "https://photos.google.com/share/AF1QipPOEu2_gHj8Si_RGxUunQNn1bN7EL23DyiQoPS4c0vjvezpn_eW-HfhpKz4zohj8w/photo/AF1QipMlsbvo60Tdzl_OzZIvsxJ8AW04d9C6F9cG9VWQ?key=dUZIOTRBYmtZa3owQ1FGc3l3M1J1TFhudHlEV0hn"
+                videoUrl: "https://www.youtube.com/embed/6Z-t_zcXKg4?si=CNSy3W6Gw7uAjkrp"
             },
             {
                 id: 'community-paralegal',
@@ -153,7 +153,11 @@ const categories = {
                     "Distribution of reflective materials",
                     "Road safety demonstrations"
                 ],
-                image: null
+                images: [
+                    "https://res.cloudinary.com/dliqth2su/image/upload/v1753966772/toto3_wlnuxp.jpg",
+                    "https://res.cloudinary.com/dliqth2su/image/upload/v1753966772/toto1_rer1px.jpg",
+                    "https://res.cloudinary.com/dliqth2su/image/upload/v1753966772/toto2_qxfph0.jpg"
+                ]
             },
             {
                 id: 'sanitary-pad-drives',
@@ -168,7 +172,7 @@ const categories = {
                     "Training on reusable pad making",
                     "Boys' sensitization programs"
                 ],
-                image: null
+                image: "https://res.cloudinary.com/dliqth2su/image/upload/v1753993361/Sanitary_Pad_Drives_iuhljw.jpg"
             }
         ]
     },
@@ -182,7 +186,7 @@ const categories = {
                 title: "Harvest of Tomorrow",
                 icon: "🌾",
                 shortDesc: "Training smallholder farmers in climate-smart agriculture.",
-                fullDesc: "Our flagship agricultural program that uses the Farmer Field School (FFS) model to train smallholder farmers in climate-smart agriculture, agroforestry, nutrition, and legal land rights. Over 6,000 farmers have benefited across Kenya.",
+                fullDesc: "Our flagship agricultural program that uses the Farmer Field School (FFS) model to train smallholder farmers in climate-smart agriculture, agroforestry, nutrition, and legal land rights. Over 6,000 farmers have benefited from this program.",
                 impact: "6,000+ farmers trained",
                 activities: [
                     "Farmer Field School training sessions",
@@ -190,7 +194,14 @@ const categories = {
                     "Demonstration plots for best practices",
                     "Market linkage facilitation"
                 ],
-                image: null
+                images: [
+                    "https://i.imgur.com/WwnRTKy.jpeg",
+                    "https://i.imgur.com/kt0PBnb.jpeg",
+                    "https://i.imgur.com/JQ1BFn2.jpeg",
+                    "https://i.imgur.com/9AGbX9A.jpeg",
+                    "https://i.imgur.com/5E4fKAx.jpeg",
+                    "https://i.imgur.com/SWmiblK.jpeg"
+                ]
             }
         ]
     }
@@ -207,7 +218,7 @@ const categories = {
             <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 text-center">
                 <h1 class="text-5xl lg:text-6xl font-bold text-white mb-6">Our Programs</h1>
                 <p class="text-xl text-white/90 max-w-3xl mx-auto">
-                    Explore our comprehensive initiatives designed to create lasting positive change in communities across Kenya
+                    Explore our comprehensive initiatives designed to create lasting positive change in communities worldwide
                 </p>
             </div>
         </section>
@@ -261,13 +272,15 @@ const categories = {
                             >
                                 <div class="grid md:grid-cols-2 gap-0">
                                     <!-- Program Image/Video Section -->
-                                    <div class="h-full relative overflow-hidden bg-gray-100">
+                                    <div class="h-full md:h-96 relative overflow-hidden bg-gray-100">
                                         <!-- Video embed for Voice of Silent Workers -->
                                         <iframe 
                                             v-if="program.videoUrl" 
                                             :src="program.videoUrl"
                                             class="w-full h-full"
+                                            style="min-height: 400px;"
                                             frameborder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                             allowfullscreen
                                         ></iframe>
                                         <!-- Image carousel for programs with multiple images -->
@@ -313,7 +326,7 @@ const categories = {
                                         
                                         <!-- Activities as paragraph -->
                                         <p class="text-gray-600 mb-6">
-                                            Through our {{ program.impact.toLowerCase() }}, we focus on {{ program.activities.join(', ').toLowerCase() }}. These initiatives work together to create lasting positive change in communities across Kenya.
+                                            Through our {{ program.impact.toLowerCase() }}, we focus on {{ program.activities.join(', ').toLowerCase() }}. These initiatives work together to create lasting positive change in communities.
                                         </p>
                                         
                                         <!-- CTA Button -->
