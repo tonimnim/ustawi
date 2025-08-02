@@ -53,7 +53,7 @@ class PaystackController extends Controller
                 'Authorization' => 'Bearer ' . config('paystack.secretKey'),
                 'Content-Type' => 'application/json',
             ])
-            ->withoutVerifying() // Disable SSL verification for local development
+            // ->withoutVerifying() // COMMENTED OUT FOR PRODUCTION
             ->post('https://api.paystack.co/transaction/initialize', [
                 'amount' => $amount,
                 'email' => $email,
@@ -142,7 +142,7 @@ class PaystackController extends Controller
                 'Authorization' => 'Bearer ' . config('paystack.secretKey'),
                 'Content-Type' => 'application/json',
             ])
-            ->withoutVerifying() // Disable SSL verification for local development
+            // ->withoutVerifying() // COMMENTED OUT FOR PRODUCTION
             ->post('https://api.paystack.co/charge', [
                 'amount' => $amount,
                 'email' => $email,
