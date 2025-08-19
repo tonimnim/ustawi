@@ -14,22 +14,38 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create default admin user for development
-        if (app()->environment('local', 'development')) {
-            $admin = User::firstOrCreate(
-                ['email' => 'admin@ustawiwajamii.org'],
+        // Admin users to create
+        $admins = [
+            [
+                'email' => 'stephenkiarie@ustawiwajamii.org',
+                'name' => 'Stephen Kiarie',
+            ],
+            [
+                'email' => 'tumainikimathi@ustawiwajamii.org',
+                'name' => 'Tumaini Kimathi',
+            ],
+            [
+                'email' => 'info@ustawiwajamii.org',
+                'name' => 'Ustawi Admin',
+            ],
+        ];
+
+        // Create admin users with the same password
+        foreach ($admins as $adminData) {
+            $user = User::firstOrCreate(
+                ['email' => $adminData['email']],
                 [
-                    'name' => 'Admin User',
-                    'password' => Hash::make('password123'),
+                    'name' => $adminData['name'],
+                    'password' => Hash::make('Playball22!'),
                     'role' => UserRole::ADMIN,
                     'email_verified_at' => now(),
                     'is_active' => true,
                 ]
             );
             
-            $this->command->info('Admin user created: admin@ustawiwajamii.org / password123');
-        } else {
-            $this->command->warn('Admin seeder disabled in production. Create admin users through the application interface.');
+            $this->command->info('Admin user created: ' . $adminData['email']);
         }
+        
+        $this->command->info('All admin users have been created with the password: Playball22!');
     }
 }

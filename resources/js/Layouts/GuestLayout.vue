@@ -1,22 +1,33 @@
 <script setup>
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import { Link } from '@inertiajs/vue3';
+import { computed } from 'vue';
+
+const currentYear = computed(() => new Date().getFullYear());
 </script>
 
 <template>
-    <div
-        class="flex min-h-screen flex-col items-center bg-gray-100 pt-6 sm:justify-center sm:pt-0"
-    >
-        <div>
-            <Link href="/">
-                <ApplicationLogo class="h-20 w-20 fill-current text-gray-500" />
-            </Link>
-        </div>
+    <div class="min-h-screen flex flex-col items-center justify-center bg-gray-50">
+        <!-- Content container -->
+        <div class="w-full max-w-md px-6">
+            <!-- Logo/Title -->
+            <div class="text-center mb-8">
+                <Link href="/" class="inline-block">
+                    <h1 class="text-4xl font-bold text-gray-900 mb-2">Ustawi Wa Jamii</h1>
+                    <p class="text-gray-600 text-sm">Empowering Communities, Transforming Lives</p>
+                </Link>
+            </div>
 
-        <div
-            class="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg"
-        >
-            <slot />
+            <!-- Card -->
+            <div class="bg-white shadow-xl rounded-2xl px-8 py-10">
+                <slot />
+            </div>
+            
+            <!-- Footer text -->
+            <div class="text-center mt-6">
+                <p class="text-gray-500 text-sm">
+                    © {{ currentYear }} Ustawi Wa Jamii. All rights reserved.
+                </p>
+            </div>
         </div>
     </div>
 </template>
