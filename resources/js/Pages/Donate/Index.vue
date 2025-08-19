@@ -1,7 +1,10 @@
 <script setup>
-import { Head, useForm } from '@inertiajs/vue3';
-import { ref, computed, watch } from 'vue';
+import { Head, useForm, usePage } from '@inertiajs/vue3';
+import { ref, computed, watch, onUnmounted } from 'vue';
+import axios from 'axios';
 import PublicLayout from '@/Layouts/PublicLayout.vue';
+
+const page = usePage();
 
 const props = defineProps({
     settings: Object,
@@ -10,6 +13,12 @@ const props = defineProps({
         default: () => []
     }
 });
+
+// M-Pesa payment processing state
+const mpesaProcessing = ref(false);
+const mpesaMessage = ref('');
+const currentDonationNumber = ref(null);
+const statusCheckInterval = ref(null);
 
 // Donation form
 const form = useForm({
@@ -90,6 +99,51 @@ const paymentMethods = [
 
 
 // Submit donation
+// Poll for payment status
+const startStatusPolling = () => {
+    if (!currentDonationNumber.value) return;
+    
+    // Poll every 3 seconds
+    statusCheckInterval.value = setInterval(async () => {
+        try {
+            const response = await axios.get(`/donations/status/${currentDonationNumber.value}`);
+            if (response.data.success && response.data.status === 'completed') {
+                // Payment successful!
+                stopStatusPolling();
+                mpesaMessage.value = 'Payment successful! Thank you for your donation.';
+                setTimeout(() => {
+                    mpesaProcessing.value = false;
+                    mpesaMessage.value = '';
+                    // Reload the page to show success message
+                    window.location.reload();
+                }, 3000);
+            } else if (response.data.status === 'failed') {
+                // Payment failed
+                stopStatusPolling();
+                mpesaMessage.value = 'Payment failed. Please try again.';
+                setTimeout(() => {
+                    mpesaProcessing.value = false;
+                    mpesaMessage.value = '';
+                }, 5000);
+            }
+        } catch (error) {
+            console.error('Error checking payment status:', error);
+        }
+    }, 3000);
+};
+
+const stopStatusPolling = () => {
+    if (statusCheckInterval.value) {
+        clearInterval(statusCheckInterval.value);
+        statusCheckInterval.value = null;
+    }
+};
+
+// Clean up on component unmount
+onUnmounted(() => {
+    stopStatusPolling();
+});
+
 const submitDonation = () => {
     // Set the final amount
     if (showCustomAmount.value) {
@@ -138,25 +192,53 @@ const submitDonation = () => {
         form.donor_email = 'anonymous@donation.com';
     }
 
-    // Log form data for debugging
-    console.log('Submitting donation with data:', {
-        amount: form.amount,
-        payment_method: form.payment_method,
-        frequency: form.frequency,
-        is_anonymous: form.is_anonymous,
-        donor_name: form.donor_name,
-        donor_email: form.donor_email,
-        donor_phone: form.donor_phone
-    });
+    // Show M-Pesa processing modal if it's an M-Pesa payment
+    if (form.payment_method === 'mpesa') {
+        mpesaProcessing.value = true;
+        mpesaMessage.value = 'Initiating M-Pesa payment...';
+    }
 
     // Submit to backend for payment processing
     form.post(route('donate.process'), {
-        onSuccess: () => {
-            // Payment will be processed via Paystack
-            console.log('Donation submitted successfully, redirecting to payment...');
+        onSuccess: (page) => {
+            // Check if we have flash messages for M-Pesa
+            if (page.props.flash?.success && form.payment_method === 'mpesa') {
+                // M-Pesa payment - show the instructions
+                mpesaMessage.value = page.props.flash.success;
+                
+                // Start polling for payment status if we have a donation number
+                if (page.props.donation_number) {
+                    currentDonationNumber.value = page.props.donation_number;
+                    startStatusPolling();
+                }
+                
+                // Auto-close after 30 seconds if payment not completed
+                setTimeout(() => {
+                    stopStatusPolling();
+                    mpesaProcessing.value = false;
+                    mpesaMessage.value = '';
+                }, 30000);
+            } else if (page.props.flash?.info && form.payment_method === 'mpesa') {
+                // M-Pesa payment info message
+                mpesaMessage.value = page.props.flash.info;
+                
+                if (page.props.donation_number) {
+                    currentDonationNumber.value = page.props.donation_number;
+                    startStatusPolling();
+                }
+                
+                setTimeout(() => {
+                    stopStatusPolling();
+                    mpesaProcessing.value = false;
+                    mpesaMessage.value = '';
+                }, 30000);
+            } else {
+                // Card payment will redirect automatically
+                mpesaProcessing.value = false;
+            }
         },
         onError: (errors) => {
-            console.error('Error submitting donation:', errors);
+            mpesaProcessing.value = false;
             if (errors.donor_name) {
                 alert('Name error: ' + errors.donor_name);
             } else if (errors.donor_email) {
@@ -167,6 +249,13 @@ const submitDonation = () => {
                 alert('Amount error: ' + errors.amount);
             } else {
                 alert('Error processing donation. Please check all fields and try again.');
+            }
+        },
+        onFinish: () => {
+            // Check for any flash errors after submission
+            if (page.props.flash?.error) {
+                mpesaProcessing.value = false;
+                mpesaMessage.value = '';
             }
         }
     });
@@ -473,5 +562,47 @@ const submitDonation = () => {
                 </div>
             </div>
         </section>
+        
+        <!-- M-Pesa Processing Modal -->
+        <div v-if="mpesaProcessing" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+            <div class="bg-white rounded-2xl p-8 max-w-md w-full">
+                <div class="text-center">
+                    <!-- Loading spinner -->
+                    <div v-if="!mpesaMessage || mpesaMessage === 'Initiating M-Pesa payment...'" class="mb-6">
+                        <svg class="animate-spin h-12 w-12 mx-auto text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </div>
+                    
+                    <!-- M-Pesa Icon when STK push is sent -->
+                    <div v-else class="mb-6">
+                        <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+                            <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">M-Pesa Payment</h3>
+                    <p class="text-gray-600 mb-6">{{ mpesaMessage }}</p>
+                    
+                    <div v-if="mpesaMessage && mpesaMessage !== 'Initiating M-Pesa payment...'" class="space-y-3">
+                        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-left">
+                            <p class="text-sm text-yellow-800">
+                                <strong>Important:</strong> Check your phone for the M-Pesa prompt and enter your PIN to complete the payment.
+                            </p>
+                        </div>
+                        
+                        <button
+                            @click="mpesaProcessing = false; mpesaMessage = ''"
+                            class="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </PublicLayout>
 </template>

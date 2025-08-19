@@ -193,15 +193,15 @@ class ContactsController extends Controller
                     ->from(config('mail.from.address'), config('mail.from.name'));
             });
             
-            // Store reply record (optional - uncomment if you create a contact_replies table)
-            // DB::table('contact_replies')->insert([
-            //     'contact_submission_id' => $id,
-            //     'subject' => $validated['subject'],
-            //     'message' => $validated['reply_message'],
-            //     'sent_by' => auth()->id(),
-            //     'created_at' => now(),
-            //     'updated_at' => now(),
-            // ]);
+            // Store reply record
+            DB::table('contact_replies')->insert([
+                'contact_submission_id' => $id,
+                'subject' => $validated['subject'],
+                'message' => $validated['reply_message'],
+                'sent_by' => auth()->id(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
             
             return back()->with('success', 'Reply sent successfully.');
         } catch (\Exception $e) {

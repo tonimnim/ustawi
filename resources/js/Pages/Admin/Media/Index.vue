@@ -9,23 +9,6 @@ const props = defineProps({
     filters: Object,
 });
 
-// Debug media URLs
-watch(() => props.media, (newMedia) => {
-    if (newMedia && newMedia.data) {
-        console.log('Media items:', newMedia.data);
-        newMedia.data.forEach(item => {
-            console.log('Media item:', {
-                id: item.id,
-                name: item.name,
-                url: item.url,
-                thumbnail_url: item.thumbnail_url,
-                mime_type: item.mime_type,
-                file_path: item.file_path
-            });
-        });
-    }
-}, { immediate: true });
-
 // State
 const showUploadModal = ref(false);
 const selectedMedia = ref([]);

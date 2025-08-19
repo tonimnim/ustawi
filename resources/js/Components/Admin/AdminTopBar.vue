@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { Link, router } from '@inertiajs/vue3';
+import axios from 'axios';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 
@@ -13,37 +14,50 @@ const emit = defineEmits(['toggle-sidebar']);
 const showNotifications = ref(false);
 const showUserMenu = ref(false);
 
-// Mock notifications (will be replaced with real data)
-const notifications = ref([
-    {
-        id: 1,
-        type: 'donation',
-        title: 'New Donation Received',
-        message: 'KES 5,000 donation from John Doe',
-        time: '2 minutes ago',
-        unread: true
-    },
-    {
-        id: 2,
-        type: 'application',
-        title: 'New Job Application',
-        message: 'Application for Agricultural Officer position',
-        time: '1 hour ago',
-        unread: true
-    },
-    {
-        id: 3,
-        type: 'contact',
-        title: 'Contact Form Submission',
-        message: 'New inquiry about partnership opportunities',
-        time: '3 hours ago',
-        unread: false
-    }
-]);
+// Real notifications from database
+const notifications = ref([]);
+const unreadCount = ref(0);
+const isLoadingNotifications = ref(false);
 
-const unreadCount = computed(() => {
-    return notifications.value.filter(n => n.unread).length;
-});
+// Fetch notifications from the server
+const fetchNotifications = async () => {
+    isLoadingNotifications.value = true;
+    try {
+        const response = await axios.get('/admin/notifications');
+        notifications.value = response.data.notifications || [];
+        unreadCount.value = response.data.unread_count || 0;
+    } catch (error) {
+        console.error('Failed to fetch notifications:', error);
+        notifications.value = [];
+        unreadCount.value = 0;
+    } finally {
+        isLoadingNotifications.value = false;
+    }
+};
+
+// Mark notification as read
+const markAsRead = async (notification) => {
+    if (!notification.unread) return;
+    
+    try {
+        await axios.post(`/admin/notifications/${notification.id}/read`);
+        notification.unread = false;
+        unreadCount.value = Math.max(0, unreadCount.value - 1);
+    } catch (error) {
+        console.error('Failed to mark notification as read:', error);
+    }
+};
+
+// Mark all notifications as read
+const markAllAsRead = async () => {
+    try {
+        await axios.post('/admin/notifications/read-all');
+        notifications.value.forEach(n => n.unread = false);
+        unreadCount.value = 0;
+    } catch (error) {
+        console.error('Failed to mark all notifications as read:', error);
+    }
+};
 
 const logout = () => {
     router.post(route('logout'));
@@ -98,10 +112,22 @@ const handleClickOutside = (event) => {
 
 onMounted(() => {
     document.addEventListener('click', handleClickOutside);
+    // Fetch notifications on component mount
+    fetchNotifications();
+    
+    // Refresh notifications every 60 seconds
+    const notificationInterval = setInterval(fetchNotifications, 60000);
+    
+    // Store interval ID for cleanup
+    window.notificationInterval = notificationInterval;
 });
 
 onUnmounted(() => {
     document.removeEventListener('click', handleClickOutside);
+    // Clear notification refresh interval
+    if (window.notificationInterval) {
+        clearInterval(window.notificationInterval);
+    }
 });
 </script>
 
@@ -184,12 +210,30 @@ onUnmounted(() => {
                             <h3 class="text-sm font-medium text-gray-900">Notifications</h3>
                         </div>
                         
-                        <div class="max-h-96 overflow-y-auto">
+                        <div v-if="isLoadingNotifications" class="px-4 py-8 text-center">
+                            <div class="inline-flex items-center">
+                                <svg class="animate-spin h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                <span class="text-sm text-gray-500">Loading notifications...</span>
+                            </div>
+                        </div>
+                        
+                        <div v-else-if="notifications.length === 0" class="px-4 py-8 text-center">
+                            <svg class="mx-auto h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                            </svg>
+                            <p class="mt-2 text-sm text-gray-500">No notifications</p>
+                        </div>
+                        
+                        <div v-else class="max-h-96 overflow-y-auto">
                             <div 
                                 v-for="notification in notifications" 
                                 :key="notification.id"
                                 class="px-4 py-3 hover:bg-gray-50 cursor-pointer border-l-4"
                                 :class="notification.unread ? 'border-l-sky-500 bg-sky-50' : 'border-l-transparent'"
+                                @click="markAsRead(notification)"
                             >
                                 <div class="flex items-start gap-x-3">
                                     <div 
@@ -219,10 +263,17 @@ onUnmounted(() => {
                             </div>
                         </div>
                         
-                        <div class="px-4 py-2 border-t border-gray-100">
+                        <div class="px-4 py-2 border-t border-gray-100 flex items-center justify-between">
                             <Link href="/admin/notifications" class="text-sm text-sky-600 hover:text-sky-700">
                                 View all notifications
                             </Link>
+                            <button 
+                                v-if="unreadCount > 0"
+                                @click="markAllAsRead"
+                                class="text-sm text-gray-600 hover:text-gray-700"
+                            >
+                                Mark all as read
+                            </button>
                         </div>
                     </div>
                 </div>

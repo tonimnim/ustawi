@@ -53,7 +53,6 @@ class PaystackController extends Controller
                 'Authorization' => 'Bearer ' . config('paystack.secretKey'),
                 'Content-Type' => 'application/json',
             ])
-            // ->withoutVerifying() // COMMENTED OUT FOR PRODUCTION
             ->post('https://api.paystack.co/transaction/initialize', [
                 'amount' => $amount,
                 'email' => $email,
@@ -142,7 +141,6 @@ class PaystackController extends Controller
                 'Authorization' => 'Bearer ' . config('paystack.secretKey'),
                 'Content-Type' => 'application/json',
             ])
-            // ->withoutVerifying() // COMMENTED OUT FOR PRODUCTION
             ->post('https://api.paystack.co/charge', [
                 'amount' => $amount,
                 'email' => $email,
@@ -213,9 +211,18 @@ class PaystackController extends Controller
             
             // For M-Pesa, we expect pay_offline status
             if (($result['data']['status'] ?? '') === 'pay_offline') {
-                // Show success message with instructions
-                return redirect()->route('donate')
-                    ->with('success', $result['data']['display_text'] ?? 'Please complete the payment authorization on your mobile phone. You will receive an M-Pesa prompt shortly.');
+                // For Inertia requests, return with flash message and donation number
+                if (request()->header('X-Inertia')) {
+                    return redirect()->route('donate')
+                        ->with('success', $result['data']['display_text'] ?? 'Please complete the payment authorization on your mobile phone. You will receive an M-Pesa prompt shortly.')
+                        ->with('donation_number', $donation->donation_number);
+                }
+                // For regular requests, return JSON
+                return response()->json([
+                    'success' => true,
+                    'message' => $result['data']['display_text'] ?? 'Please complete the payment authorization on your mobile phone.',
+                    'status' => 'pay_offline'
+                ]);
             }
             
             // If payment was processed immediately (unlikely for M-Pesa)
@@ -228,13 +235,28 @@ class PaystackController extends Controller
                         'updated_at' => now()
                     ]);
                     
-                return redirect()->route('donate')
-                    ->with('success', 'Payment completed successfully!');
+                if (request()->header('X-Inertia')) {
+                    return redirect()->route('donate')
+                        ->with('success', 'Payment completed successfully!');
+                }
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Payment completed successfully!',
+                    'status' => 'success'
+                ]);
             }
             
             // Default message
-            return redirect()->route('donate')
-                ->with('info', 'Payment initiated. Please check your phone for the M-Pesa prompt.');
+            if (request()->header('X-Inertia')) {
+                return redirect()->route('donate')
+                    ->with('info', 'Payment initiated. Please check your phone for the M-Pesa prompt.')
+                    ->with('donation_number', $donation->donation_number);
+            }
+            return response()->json([
+                'success' => true,
+                'message' => 'Payment initiated. Please check your phone for the M-Pesa prompt.',
+                'status' => 'pending'
+            ]);
                 
         } catch (\Exception $e) {
             \Log::error('M-Pesa payment error', [
@@ -302,8 +324,6 @@ class PaystackController extends Controller
                     'created_at' => now(),
                     'updated_at' => now()
                 ]);
-
-                // TODO: Send email receipt to donor
                 
                 return redirect()->route('donate')
                     ->with('success', 'Thank you for your donation! Your payment has been processed successfully.');

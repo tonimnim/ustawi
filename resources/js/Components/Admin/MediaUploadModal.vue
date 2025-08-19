@@ -48,7 +48,6 @@ const validateFile = (file) => {
 // Handle file selection
 const handleFileSelect = (event) => {
     const files = Array.from(event.target.files || event.dataTransfer?.files || []);
-    console.log('Files selected:', files.length, files);
     
     files.forEach(file => {
         const validation = validateFile(file);
@@ -111,8 +110,6 @@ const uploadFiles = async () => {
             }
         });
         
-        console.log('Upload response:', response.data);
-        
         // Check if response has files
         if (response.data && response.data.files && response.data.files.length > 0) {
             // Add uploaded files to selected media
@@ -132,12 +129,10 @@ const uploadFiles = async () => {
             // Emit uploaded event to refresh the page
             emit('uploaded', response.data.files);
         } else {
-            console.error('No files in response:', response);
-            alert('Upload completed but no files were returned. Please check the console for details.');
+            alert('Upload completed but no files were returned.');
         }
     } catch (error) {
         console.error('Upload error:', error);
-        console.error('Error response:', error.response);
         
         if (error.response && error.response.status === 422) {
             const errors = error.response.data.errors;
@@ -156,16 +151,11 @@ const uploadFiles = async () => {
 
 // Toggle media selection
 const toggleMediaSelection = (media) => {
-    console.log('Toggling media selection:', media);
-    console.log('Current selectedMedia:', selectedMedia.value);
-    
     const index = selectedMedia.value.findIndex(m => m.id === media.id);
     if (index > -1) {
         selectedMedia.value.splice(index, 1);
-        console.log('Removed media, new selection:', selectedMedia.value);
     } else {
         selectedMedia.value.push(media);
-        console.log('Added media, new selection:', selectedMedia.value);
     }
 };
 

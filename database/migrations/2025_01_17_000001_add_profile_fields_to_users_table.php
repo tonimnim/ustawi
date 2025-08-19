@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             // Role system
             if (!Schema::hasColumn('users', 'role')) {
-                $table->enum('role', UserRole::getValues())->default(UserRole::USER->value)->after('email');
+                $table->string('role')->default(UserRole::USER->value)->after('email');
             }
             
             // Contact information

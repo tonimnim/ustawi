@@ -6,7 +6,9 @@
       "Bash(mkdir:*)",
       "Bash(php artisan:*)",
       "Bash(npm install:*)",
-      "Bash(dir public)"
+      "Bash(dir public)",
+      "WebSearch",
+      "Bash(rm:*)"
     ],
     "deny": []
   }

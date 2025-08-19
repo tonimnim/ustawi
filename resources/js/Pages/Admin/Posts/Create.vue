@@ -19,7 +19,7 @@ const form = useForm({
     slug: '',
     excerpt: '',
     content: '',
-    category_id: '',
+    category_id: props.categories && props.categories.length > 0 ? props.categories[0].id : null,
     status: 'draft',
     is_featured: false,
     allow_comments: true,
@@ -79,7 +79,7 @@ const handleFeaturedImageUpload = async (event) => {
     try {
         // Upload to server
         const formData = new FormData();
-        formData.append('files[0]', file);
+        formData.append('files', file); // Send as single file, not array notation
         
         const response = await axios.post('/admin/media/upload', formData, {
             headers: {
@@ -107,7 +107,6 @@ const submit = () => {
             // Redirect handled by controller
         },
         onError: (errors) => {
-            console.error('Form submission errors:', errors);
             // Show validation message
             const firstError = Object.values(errors)[0];
             alert('Validation Error: ' + firstError);
@@ -167,7 +166,6 @@ const handleAutoSave = (autoSaveData) => {
     
     try {
         localStorage.setItem(autoSaveKey, JSON.stringify(autoSavePayload));
-        console.log('Auto-save completed at:', autoSaveData.timestamp);
     } catch (error) {
         console.error('Auto-save failed:', error);
     }

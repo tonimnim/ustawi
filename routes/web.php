@@ -19,6 +19,7 @@ Route::post('/donate', [HomeController::class, 'processDonation'])->name('donate
 Route::get('/donations/pay/{donation_id}', [\App\Http\Controllers\PaystackController::class, 'initializePayment'])->name('donations.pay');
 Route::get('/donations/callback', [\App\Http\Controllers\PaystackController::class, 'handleCallback'])->name('donations.callback');
 Route::post('/paystack/webhook', [\App\Http\Controllers\PaystackController::class, 'webhook'])->name('paystack.webhook');
+Route::get('/donations/status/{donation_number}', [\App\Http\Controllers\DonationStatusController::class, 'checkStatus'])->name('donations.status');
 
 // Blog routes
 Route::get('/blog', [HomeController::class, 'blog'])->name('blog');
@@ -47,27 +48,6 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
-
-// Debug route for homepage images
-Route::get('/debug/homepage-images', function () {
-    $settings = \DB::table('site_settings')
-        ->where('key', 'homepage_images')
-        ->first();
-    
-    $mediaFiles = \DB::table('media_files')
-        ->select('id', 'name', 'file_path', 'mime_type', 'alt_text')
-        ->where('mime_type', 'like', 'image/%')
-        ->get();
-    
-    return response()->json([
-        'homepage_images_setting' => $settings,
-        'decoded_images' => $settings ? json_decode($settings->value, true) : null,
-        'all_media_files' => $mediaFiles,
-        'storage_path' => storage_path('app/public'),
-        'public_path' => public_path('storage'),
-        'symlink_exists' => file_exists(public_path('storage')),
-    ]);
-});
 
 // Include admin routes
 require __DIR__.'/admin.php';

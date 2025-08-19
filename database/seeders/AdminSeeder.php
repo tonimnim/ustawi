@@ -14,10 +14,22 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        // No admin users will be automatically seeded
-        // Admin users should be created through the application interface
-        // or manually through proper user registration/creation process
-        
-        $this->command->info('Admin seeder disabled. Create admin users through the application interface.');
+        // Create default admin user for development
+        if (app()->environment('local', 'development')) {
+            $admin = User::firstOrCreate(
+                ['email' => 'admin@ustawiwajamii.org'],
+                [
+                    'name' => 'Admin User',
+                    'password' => Hash::make('password123'),
+                    'role' => UserRole::ADMIN,
+                    'email_verified_at' => now(),
+                    'is_active' => true,
+                ]
+            );
+            
+            $this->command->info('Admin user created: admin@ustawiwajamii.org / password123');
+        } else {
+            $this->command->warn('Admin seeder disabled in production. Create admin users through the application interface.');
+        }
     }
 }

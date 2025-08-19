@@ -1,12 +1,40 @@
 <script setup>
 import { Head, Link, router } from '@inertiajs/vue3';
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 
 const props = defineProps({
+    donations: {
+        type: Array,
+        default: () => []
+    },
+    donors: {
+        type: Array,
+        default: () => []
+    },
+    stats: {
+        type: Object,
+        default: () => ({})
+    },
+    pagination: {
+        type: Object,
+        default: () => ({})
+    },
+    filters: {
+        type: Object,
+        default: () => ({})
+    },
     activeTab: {
         type: String,
         default: 'donations'
+    },
+    paymentMethods: {
+        type: Object,
+        default: () => ({})
+    },
+    statusOptions: {
+        type: Object,
+        default: () => ({})
     }
 });
 
@@ -15,107 +43,30 @@ const currentTab = ref(props.activeTab);
 
 const switchTab = (tab) => {
     currentTab.value = tab;
+    router.get(route('admin.donations.index'), { tab }, { preserveState: true });
 };
 
-// Mock data for donations (will be replaced with real data when backend is integrated)
-const donations = ref([
-    {
-        id: 1,
-        donor_name: 'John Doe',
-        donor_email: 'john@example.com',
-        amount: 50000,
-        currency: 'KES',
-        payment_method: 'M-Pesa',
-        transaction_id: 'QH45JKRTE3',
-        status: 'completed',
-        purpose: 'General Support',
-        date: '2025-01-19T10:30:00',
-        anonymous: false
-    },
-    {
-        id: 2,
-        donor_name: 'Anonymous',
-        donor_email: 'donor2@example.com',
-        amount: 25000,
-        currency: 'KES',
-        payment_method: 'Bank Transfer',
-        transaction_id: 'BNK-2025-0023',
-        status: 'completed',
-        purpose: 'Youth Programs',
-        date: '2025-01-18T14:20:00',
-        anonymous: true
-    },
-    {
-        id: 3,
-        donor_name: 'Sarah Johnson',
-        donor_email: 'sarah.j@example.com',
-        amount: 100,
-        currency: 'USD',
-        payment_method: 'PayPal',
-        transaction_id: 'PP-5Y6789KLM',
-        status: 'pending',
-        purpose: 'Environmental Projects',
-        date: '2025-01-18T09:15:00',
-        anonymous: false
-    }
-]);
+// Use real data from props
+const donations = ref(props.donations);
+const donors = ref(props.donors);
+const stats = computed(() => props.stats);
 
-// Mock data for donors
-const donors = ref([
-    {
-        id: 1,
-        name: 'John Doe',
-        email: 'john@example.com',
-        phone: '+254 712 345 678',
-        total_donated: 150000,
-        donation_count: 5,
-        first_donation: '2024-06-15',
-        last_donation: '2025-01-19',
-        status: 'active',
-        type: 'individual'
-    },
-    {
-        id: 2,
-        name: 'ABC Foundation',
-        email: 'info@abcfoundation.org',
-        phone: '+254 720 987 654',
-        total_donated: 1500000,
-        donation_count: 12,
-        first_donation: '2024-01-10',
-        last_donation: '2025-01-15',
-        status: 'active',
-        type: 'organization'
-    },
-    {
-        id: 3,
-        name: 'Sarah Johnson',
-        email: 'sarah.j@example.com',
-        phone: '+1 555 123 4567',
-        total_donated: 500,
-        donation_count: 3,
-        first_donation: '2024-09-20',
-        last_donation: '2025-01-18',
-        status: 'active',
-        type: 'individual'
-    }
-]);
+// Filter states
+const searchQuery = ref(props.filters.search || '');
+const statusFilter = ref(props.filters.status || '');
+const paymentMethodFilter = ref(props.filters.payment_method || '');
+const dateFilter = ref(props.filters.date_from || '');
 
-// Statistics
-const stats = computed(() => ({
-    total_donations: donations.value.reduce((sum, d) => {
-        if (d.status === 'completed') {
-            if (d.currency === 'KES') return sum + d.amount;
-            if (d.currency === 'USD') return sum + (d.amount * 150); // Rough conversion
-            return sum;
-        }
-        return sum;
-    }, 0),
-    monthly_donations: 175000, // Mock data
-    total_donors: donors.value.length,
-    active_donors: donors.value.filter(d => d.status === 'active').length,
-    pending_donations: donations.value.filter(d => d.status === 'pending').length,
-    completed_donations: donations.value.filter(d => d.status === 'completed').length
-}));
+// Apply filters
+const applyFilters = () => {
+    router.get(route('admin.donations.index'), {
+        search: searchQuery.value,
+        status: statusFilter.value,
+        payment_method: paymentMethodFilter.value,
+        date_from: dateFilter.value,
+        tab: currentTab.value
+    }, { preserveState: true });
+};
 
 // Format currency
 const formatCurrency = (amount, currency = 'KES') => {
@@ -268,25 +219,35 @@ const getDonorTypeBadge = (type) => {
                 <!-- Filters -->
                 <div class="mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
                     <input
+                        v-model="searchQuery"
+                        @keyup.enter="applyFilters"
                         type="text"
                         placeholder="Search donations..."
                         class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
-                    <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <select 
+                        v-model="statusFilter"
+                        @change="applyFilters"
+                        class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
                         <option value="">All Status</option>
-                        <option value="completed">Completed</option>
-                        <option value="pending">Pending</option>
-                        <option value="failed">Failed</option>
-                        <option value="refunded">Refunded</option>
+                        <option v-for="(label, value) in props.statusOptions" :key="value" :value="value">
+                            {{ label }}
+                        </option>
                     </select>
-                    <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <select 
+                        v-model="paymentMethodFilter"
+                        @change="applyFilters"
+                        class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
                         <option value="">All Methods</option>
-                        <option value="mpesa">M-Pesa</option>
-                        <option value="bank">Bank Transfer</option>
-                        <option value="paypal">PayPal</option>
-                        <option value="card">Credit/Debit Card</option>
+                        <option v-for="(label, value) in props.paymentMethods" :key="value" :value="value">
+                            {{ label }}
+                        </option>
                     </select>
                     <input
+                        v-model="dateFilter"
+                        @change="applyFilters"
                         type="date"
                         class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
@@ -321,7 +282,12 @@ const getDonorTypeBadge = (type) => {
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            <tr v-for="donation in donations" :key="donation.id">
+                            <tr v-if="donations.length === 0">
+                                <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+                                    No donations found. Donations will appear here once payments are processed.
+                                </td>
+                            </tr>
+                            <tr v-for="donation in donations" :key="donation.id" v-else>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div>
                                         <div class="text-sm font-medium text-gray-900">
@@ -455,20 +421,6 @@ const getDonorTypeBadge = (type) => {
                             </tr>
                         </tbody>
                     </table>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Note about integration -->
-        <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <div class="flex">
-                <svg class="flex-shrink-0 h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
-                </svg>
-                <div class="ml-3">
-                    <p class="text-sm text-blue-700">
-                        <strong>Note:</strong> This is a frontend preview. Payment integration will be implemented when payment methods are configured.
-                    </p>
                 </div>
             </div>
         </div>

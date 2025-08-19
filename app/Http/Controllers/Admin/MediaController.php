@@ -7,8 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
 
 class MediaController extends Controller
 {
@@ -72,14 +70,32 @@ class MediaController extends Controller
      */
     public function upload(Request $request)
     {
-        $request->validate([
-            'files.*' => 'required|file|mimes:jpeg,jpg,png,gif,webp,mp4,webm,ogg,pdf,doc,docx|max:10240', // 10MB max
-        ]);
+        // Check if it's a single file or multiple files
+        if ($request->hasFile('files')) {
+            $files = $request->file('files');
+            
+            // Validate based on whether it's an array or single file
+            if (is_array($files)) {
+                $request->validate([
+                    'files.*' => 'required|file|mimes:jpeg,jpg,png,gif,webp,mp4,webm,ogg,pdf,doc,docx|max:10240', // 10MB max
+                ]);
+            } else {
+                // Single file upload
+                $request->validate([
+                    'files' => 'required|file|mimes:jpeg,jpg,png,gif,webp,mp4,webm,ogg,pdf,doc,docx|max:10240', // 10MB max
+                ]);
+                $files = [$files]; // Convert to array for uniform processing
+            }
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'No files provided for upload.'
+            ], 400);
+        }
         
         $uploadedFiles = [];
-        $manager = new ImageManager(new Driver());
         
-        foreach ($request->file('files') as $file) {
+        foreach ($files as $file) {
             try {
                 // Generate unique filename
                 $originalName = $file->getClientOriginalName();
@@ -105,72 +121,24 @@ class MediaController extends Controller
                 $dimensions = null;
                 $thumbnailPath = null;
                 
-                // Process images with optimization and resizing
+                // Store file directly without image processing (GD not available)
+                $path = $file->storeAs('media/' . $folder, $filename, 'public');
+                
+                // Get file size
+                $fileSize = $file->getSize();
+                
+                // For images, try to get dimensions if possible
                 if (str_starts_with($mimeType, 'image/')) {
-                    $image = $manager->read($file->getRealPath());
-                    $originalWidth = $image->width();
-                    $originalHeight = $image->height();
-                    $dimensions = ['width' => $originalWidth, 'height' => $originalHeight];
-                    
-                    // Optimize and resize if too large
-                    $maxWidth = 1920;
-                    $maxHeight = 1080;
-                    
-                    if ($originalWidth > $maxWidth || $originalHeight > $maxHeight) {
-                        $image->scaleDown($maxWidth, $maxHeight);
+                    $fullPath = storage_path('app/public/' . $path);
+                    if (file_exists($fullPath)) {
+                        $imageInfo = @getimagesize($fullPath);
+                        if ($imageInfo) {
+                            $dimensions = [
+                                'width' => $imageInfo[0],
+                                'height' => $imageInfo[1]
+                            ];
+                        }
                     }
-                    
-                    // Ensure directory exists
-                    Storage::disk('public')->makeDirectory('media/' . $folder);
-                    
-                    // Save optimized image in original format
-                    $optimizedPath = storage_path('app/public/media/' . $folder . '/' . $filename);
-                    
-                    // Save based on original format
-                    if (str_contains($mimeType, 'jpeg') || str_contains($mimeType, 'jpg')) {
-                        $image->toJpeg(85)->save($optimizedPath);
-                    } elseif (str_contains($mimeType, 'png')) {
-                        $image->toPng()->save($optimizedPath);
-                    } elseif (str_contains($mimeType, 'gif')) {
-                        $image->toGif()->save($optimizedPath);
-                    } elseif (str_contains($mimeType, 'webp')) {
-                        $image->toWebp(85)->save($optimizedPath);
-                    } else {
-                        // Default to JPEG for unknown formats
-                        $image->toJpeg(85)->save($optimizedPath);
-                    }
-                    
-                    $path = 'media/' . $folder . '/' . $filename;
-                    
-                    // Create thumbnail for images
-                    $thumbnailFilename = 'thumb_' . $filename;
-                    $thumbnailImage = $manager->read($optimizedPath);
-                    $thumbnailImage->scaleDown(300, 300);
-                    $thumbnailPath = 'media/' . $folder . '/thumbnails/' . $thumbnailFilename;
-                    
-                    // Ensure thumbnail directory exists
-                    Storage::disk('public')->makeDirectory('media/' . $folder . '/thumbnails');
-                    
-                    // Save thumbnail in same format as original
-                    $thumbnailFullPath = storage_path('app/public/' . $thumbnailPath);
-                    if (str_contains($mimeType, 'jpeg') || str_contains($mimeType, 'jpg')) {
-                        $thumbnailImage->toJpeg(85)->save($thumbnailFullPath);
-                    } elseif (str_contains($mimeType, 'png')) {
-                        $thumbnailImage->toPng()->save($thumbnailFullPath);
-                    } elseif (str_contains($mimeType, 'gif')) {
-                        $thumbnailImage->toGif()->save($thumbnailFullPath);
-                    } elseif (str_contains($mimeType, 'webp')) {
-                        $thumbnailImage->toWebp(85)->save($thumbnailFullPath);
-                    } else {
-                        $thumbnailImage->toJpeg(85)->save($thumbnailFullPath);
-                    }
-                    
-                } else {
-                    // For non-images, store normally
-                    $path = $file->storeAs('media/' . $folder, $filename, 'public');
-                    
-                    // Get file size
-                    $fileSize = $file->getSize();
                 }
                 
                 // Save to database
@@ -181,7 +149,7 @@ class MediaController extends Controller
                     'thumbnail_path' => $thumbnailPath,
                     'mime_type' => $mimeType,
                     'extension' => $extension,
-                    'file_size' => isset($fileSize) ? $fileSize : filesize(storage_path('app/public/' . $path)),
+                    'file_size' => $fileSize,
                     'dimensions' => $dimensions ? json_encode($dimensions) : null,
                     'uploaded_by' => auth()->id(),
                     'created_at' => now(),

@@ -6,79 +6,26 @@ import { computed } from 'vue';
 const page = usePage();
 const user = computed(() => page.props.auth.user);
 
-// Mock dashboard data (will be replaced with real data)
-const stats = [
-    {
-        name: 'Total Donations (This Month)',
-        value: 'KES 2,450,000',
-        change: '+12.5%',
-        changeType: 'increase',
-        icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
+// Get props from backend
+const props = defineProps({
+    stats: {
+        type: Array,
+        default: () => []
     },
-    {
-        name: 'Active Donors',
-        value: '1,245',
-        change: '+8.2%',
-        changeType: 'increase',
-        icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z'
+    recentActivities: {
+        type: Array,
+        default: () => []
     },
-    {
-        name: 'Newsletter Subscribers',
-        value: '3,842',
-        change: '+15.1%',
-        changeType: 'increase',
-        icon: 'M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 2.25l-8.8 5.28a2.25 2.25 0 01-2.4 0L2.25 9M15 10.5a3 3 0 11-6 0 3 3 0 016 0z'
-    },
-    {
-        name: 'Website Visitors (Today)',
-        value: '892',
-        change: '+3.8%',
-        changeType: 'increase',
-        icon: 'M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z M15 12a3 3 0 11-6 0 3 3 0 016 0z'
+    impactMetrics: {
+        type: Array,
+        default: () => []
     }
-];
+});
 
-const impactMetrics = [
-    { name: 'Farmers Trained', value: '6,247', target: '7,000', progress: 89 },
-    { name: 'Trees Planted', value: '5,892', target: '6,000', progress: 98 },
-    { name: 'Students Sponsored', value: '2,156', target: '2,500', progress: 86 },
-    { name: 'Legal Cases Resolved', value: '342', target: '400', progress: 86 }
-];
-
-const recentActivities = [
-    {
-        id: 1,
-        type: 'donation',
-        title: 'New donation received',
-        description: 'KES 15,000 from Mary Wanjiku for Harvest of Tomorrow',
-        time: '2 minutes ago',
-        icon: 'donation'
-    },
-    {
-        id: 2,
-        type: 'application',
-        title: 'Job application submitted',
-        description: 'Application for Agricultural Officer in Kirinyaga',
-        time: '1 hour ago',
-        icon: 'application'
-    },
-    {
-        id: 3,
-        type: 'blog',
-        title: 'New blog post published',
-        description: 'Success story from Marsabit County published',
-        time: '3 hours ago',
-        icon: 'blog'
-    },
-    {
-        id: 4,
-        type: 'contact',
-        title: 'Contact form submission',
-        description: 'Partnership inquiry from Green Earth Foundation',
-        time: '5 hours ago',
-        icon: 'contact'
-    }
-];
+// Use data from props
+const stats = props.stats;
+const impactMetrics = props.impactMetrics;
+const recentActivities = props.recentActivities;
 </script>
 
 <template>
@@ -118,9 +65,26 @@ const recentActivities = [
                                 <dt class="text-sm font-medium text-gray-500 truncate">{{ stat.name }}</dt>
                                 <dd class="flex items-baseline">
                                     <div class="text-2xl font-semibold text-gray-900">{{ stat.value }}</div>
-                                    <div class="ml-2 flex items-baseline text-sm font-semibold text-green-600">
-                                        <svg class="h-4 w-4 flex-shrink-0 self-center" fill="currentColor" viewBox="0 0 20 20">
+                                    <div 
+                                        v-if="stat.change !== '0%'"
+                                        class="ml-2 flex items-baseline text-sm font-semibold"
+                                        :class="stat.changeType === 'increase' ? 'text-green-600' : 'text-red-600'"
+                                    >
+                                        <svg 
+                                            v-if="stat.changeType === 'increase'"
+                                            class="h-4 w-4 flex-shrink-0 self-center" 
+                                            fill="currentColor" 
+                                            viewBox="0 0 20 20"
+                                        >
                                             <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                        </svg>
+                                        <svg 
+                                            v-else
+                                            class="h-4 w-4 flex-shrink-0 self-center" 
+                                            fill="currentColor" 
+                                            viewBox="0 0 20 20"
+                                        >
+                                            <path fill-rule="evenodd" d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L10 12.586V5a1 1 0 012 0v7.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                                         </svg>
                                         {{ stat.change }}
                                     </div>
@@ -164,7 +128,7 @@ const recentActivities = [
                     <p class="text-gray-600 text-sm">Latest updates across the platform</p>
                 </div>
                 <div class="p-6">
-                    <div class="space-y-4">
+                    <div v-if="recentActivities && recentActivities.length > 0" class="space-y-4">
                         <div v-for="activity in recentActivities" :key="activity.id" class="flex items-start space-x-3">
                             <div class="flex-shrink-0">
                                 <div class="w-8 h-8 bg-sky-100 rounded-full flex items-center justify-center">
@@ -178,9 +142,12 @@ const recentActivities = [
                             </div>
                         </div>
                     </div>
+                    <div v-else class="text-center py-8">
+                        <p class="text-gray-500 text-sm">No recent activity to display</p>
+                    </div>
                     
-                    <div class="mt-6 pt-4 border-t border-gray-200">
-                        <a href="/admin/activities" class="text-sm text-sky-600 hover:text-sky-700 font-medium">
+                    <div v-if="recentActivities && recentActivities.length > 0" class="mt-6 pt-4 border-t border-gray-200">
+                        <a href="/admin/logs" class="text-sm text-sky-600 hover:text-sky-700 font-medium">
                             View all activity →
                         </a>
                     </div>

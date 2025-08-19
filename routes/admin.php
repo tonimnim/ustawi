@@ -10,6 +10,9 @@ use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\CareersController as AdminCareersController;
 use App\Http\Controllers\Admin\NewsletterController as AdminNewsletterController;
 use App\Http\Controllers\Admin\ContactsController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DonationsController;
+use App\Http\Controllers\Admin\NotificationsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,9 +30,14 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     
     // Dashboard
-    Route::get('/dashboard', function () {
-        return inertia('Dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Notifications
+    Route::prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/', [NotificationsController::class, 'index'])->name('index');
+        Route::post('/{id}/read', [NotificationsController::class, 'markAsRead'])->name('read');
+        Route::post('/read-all', [NotificationsController::class, 'markAllAsRead'])->name('read-all');
+    });
 
     // Profile Management
     Route::prefix('profile')->name('profile.')->group(function () {
@@ -88,9 +96,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         return inertia('Admin/Stories/Index');
     })->name('stories.index');
 
-    Route::get('/donations', function () {
-        return inertia('Admin/Donations/Index');
-    })->name('donations.index');
+    // Donations Management
+    Route::prefix('donations')->name('donations.')->group(function () {
+        Route::get('/', [DonationsController::class, 'index'])->name('index');
+        Route::get('/{id}', [DonationsController::class, 'show'])->name('show');
+        Route::get('/{id}/receipt', [DonationsController::class, 'receipt'])->name('receipt');
+        Route::get('/export/data', [DonationsController::class, 'export'])->name('export');
+    });
 
 
     Route::get('/payments', function () {

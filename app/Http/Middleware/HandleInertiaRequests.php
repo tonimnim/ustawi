@@ -38,6 +38,13 @@ class HandleInertiaRequests extends Middleware
                 'name' => config('app.name'),
                 'url' => config('app.url'),
             ],
+            'flash' => [
+                'success' => session('success'),
+                'error' => session('error'),
+                'info' => session('info'),
+                'warning' => session('warning'),
+            ],
+            'donation_number' => session('donation_number'),
         ];
     }
 }
