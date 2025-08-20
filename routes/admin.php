@@ -70,16 +70,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::put('/{post}/toggle-featured', [PostsController::class, 'toggleFeatured'])->name('toggle-featured');
     });
 
-    // Categories Management
-    Route::prefix('categories')->name('categories.')->group(function () {
-        Route::get('/', [\App\Http\Controllers\Admin\CategoriesController::class, 'index'])->name('index');
-        Route::get('/create', [\App\Http\Controllers\Admin\CategoriesController::class, 'create'])->name('create');
-        Route::post('/', [\App\Http\Controllers\Admin\CategoriesController::class, 'store'])->name('store');
-        Route::get('/{category}/edit', [\App\Http\Controllers\Admin\CategoriesController::class, 'edit'])->name('edit');
-        Route::put('/{category}', [\App\Http\Controllers\Admin\CategoriesController::class, 'update'])->name('update');
-        Route::delete('/{category}', [\App\Http\Controllers\Admin\CategoriesController::class, 'destroy'])->name('destroy');
-    });
-
     // Media API routes (used by posts, but no standalone media library)
     Route::prefix('media')->name('media.')->group(function () {
         Route::post('/upload', [MediaController::class, 'upload'])->name('upload');

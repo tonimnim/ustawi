@@ -43,19 +43,10 @@ class MediaController extends Controller
                       ->paginate(24)
                       ->withQueryString();
         
-        // Add URL to each media item
+        // Add URL to each media item - use asset() for production
         $media->through(function ($item) {
-            $item->url = Storage::url($item->file_path);
-            $item->thumbnail_url = $item->thumbnail_path ? Storage::url($item->thumbnail_path) : null;
-            
-            // Add debugging info
-            \Log::info('Media URL Debug', [
-                'file_path' => $item->file_path,
-                'generated_url' => $item->url,
-                'full_path' => storage_path('app/public/' . $item->file_path),
-                'file_exists' => file_exists(storage_path('app/public/' . $item->file_path))
-            ]);
-            
+            $item->url = asset('storage/' . $item->file_path);
+            $item->thumbnail_url = $item->thumbnail_path ? asset('storage/' . $item->thumbnail_path) : null;
             return $item;
         });
         
@@ -121,8 +112,8 @@ class MediaController extends Controller
                 $dimensions = null;
                 $thumbnailPath = null;
                 
-                // Store file directly without image processing (GD not available)
-                $path = $file->storeAs('media/' . $folder, $filename, 'public');
+                // Store file in public disk
+                $path = $file->storeAs($folder, $filename, 'public');
                 
                 // Get file size
                 $fileSize = $file->getSize();
@@ -156,11 +147,12 @@ class MediaController extends Controller
                     'updated_at' => now(),
                 ]);
                 
+                // Generate URL - use asset() for production compatibility
                 $uploadedFiles[] = [
                     'id' => $mediaId,
                     'name' => $filename,
-                    'url' => Storage::url($path),
-                    'thumbnail_url' => $thumbnailPath ? Storage::url($thumbnailPath) : null,
+                    'url' => asset('storage/' . $path),
+                    'thumbnail_url' => $thumbnailPath ? asset('storage/' . $thumbnailPath) : null,
                     'mime_type' => $mimeType,
                     'dimensions' => $dimensions,
                 ];
@@ -236,10 +228,10 @@ class MediaController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
         
-        // Add URL to each media item
+        // Add URL to each media item - use asset() for production
         $media->transform(function ($item) {
-            $item->url = Storage::url($item->file_path);
-            $item->thumbnail_url = $item->thumbnail_path ? Storage::url($item->thumbnail_path) : null;
+            $item->url = asset('storage/' . $item->file_path);
+            $item->thumbnail_url = $item->thumbnail_path ? asset('storage/' . $item->thumbnail_path) : null;
             return $item;
         });
         

@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // No default users will be created
-        // Users should be created through the application interface
+        // Seed blog categories
+        $this->call(BlogCategorySeeder::class);
     }
 }
