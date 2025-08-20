@@ -33,6 +33,11 @@ Route::post('/careers/apply', [CareersController::class, 'apply'])->name('career
 Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
 Route::get('/newsletter/unsubscribe/{token}', [NewsletterController::class, 'unsubscribe'])->name('newsletter.unsubscribe');
 
+// Session keep-alive route
+Route::post('/api/session/keepalive', function () {
+    return response()->json(['status' => 'ok']);
+})->middleware('web')->name('session.keepalive');
+
 // Redirect /dashboard to admin dashboard for authenticated users
 Route::get('/dashboard', function () {
     if (auth()->check() && auth()->user()->isAdmin()) {

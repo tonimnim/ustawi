@@ -11,3 +11,16 @@ if (token) {
 } else {
     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
+
+// Handle 419 CSRF token expiration globally
+window.axios.interceptors.response.use(
+    response => response,
+    error => {
+        if (error.response && error.response.status === 419) {
+            // Session expired, refresh the page
+            alert('Your session has expired. The page will refresh.');
+            window.location.reload();
+        }
+        return Promise.reject(error);
+    }
+);

@@ -92,7 +92,12 @@ const handleFeaturedImageUpload = async (event) => {
         }
     } catch (error) {
         console.error('Featured image upload failed:', error);
-        alert('Failed to upload image. Please try again.');
+        if (error.response && error.response.status === 419) {
+            alert('Your session has expired. The page will refresh.');
+            window.location.reload();
+        } else {
+            alert('Failed to upload image. Please try again.');
+        }
     }
     
     // Reset input
@@ -107,9 +112,14 @@ const submit = () => {
             // Redirect handled by controller
         },
         onError: (errors) => {
-            // Show validation message
-            const firstError = Object.values(errors)[0];
-            alert('Validation Error: ' + firstError);
+            if (errors.message && errors.message.includes('419')) {
+                alert('Your session has expired. The page will refresh.');
+                window.location.reload();
+            } else {
+                // Show validation message
+                const firstError = Object.values(errors)[0];
+                alert('Validation Error: ' + firstError);
+            }
         },
     });
 };

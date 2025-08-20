@@ -35,7 +35,16 @@ const submit = () => {
         responsibilities: convertToList(form.responsibilities),
     };
     
-    form.transform(() => data).post(route('admin.careers.store'));
+    form.transform(() => data).post(route('admin.careers.store'), {
+        onError: (errors) => {
+            // Handle 419 CSRF token error
+            if (errors.message && errors.message.includes('419')) {
+                alert('Your session has expired. The page will refresh to continue.');
+                window.location.reload();
+            }
+        },
+        preserveScroll: true,
+    });
 };
 </script>
 

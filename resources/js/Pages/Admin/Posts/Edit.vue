@@ -74,7 +74,7 @@ const handleFeaturedImageUpload = async (event) => {
     try {
         // Upload to server
         const formData = new FormData();
-        formData.append('files[0]', file);
+        formData.append('files', file); // Send as single file, not array notation
         
         const response = await axios.post('/admin/media/upload', formData, {
             headers: {
@@ -87,7 +87,12 @@ const handleFeaturedImageUpload = async (event) => {
         }
     } catch (error) {
         console.error('Featured image upload failed:', error);
-        alert('Failed to upload image. Please try again.');
+        if (error.response && error.response.status === 419) {
+            alert('Your session has expired. The page will refresh.');
+            window.location.reload();
+        } else {
+            alert('Failed to upload image. Please try again.');
+        }
     }
     
     // Reset input
@@ -100,6 +105,12 @@ const submit = () => {
         preserveScroll: true,
         onSuccess: () => {
             // Redirect handled by controller
+        },
+        onError: (errors) => {
+            if (errors.message && errors.message.includes('419')) {
+                alert('Your session has expired. The page will refresh.');
+                window.location.reload();
+            }
         },
     });
 };

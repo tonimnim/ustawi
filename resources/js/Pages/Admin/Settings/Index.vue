@@ -174,6 +174,7 @@ const removeImage = (imageId) => {
         // Save to database
         router.post(route('admin.settings.update', 'homepage'), formData, {
             preserveScroll: true,
+            forceFormData: true,
             onSuccess: (page) => {
                 // Update from server response
                 if (page.props.settings?.homepage_images) {
@@ -230,6 +231,7 @@ const uploadImages = () => {
     // Use router.post with FormData
     router.post(route('admin.settings.update', 'homepage'), formData, {
         preserveScroll: true,
+        forceFormData: true,
         onSuccess: (page) => {
             // Update homepage images from response
             if (page.props.settings?.homepage_images) {
@@ -255,15 +257,22 @@ const uploadImages = () => {
         },
         onError: (errors) => {
             console.error('Upload errors:', errors);
-            if (errors.images) {
+            if (errors.message && errors.message.includes('419')) {
+                alert('Your session has expired. The page will refresh.');
+                window.location.reload();
+            } else if (errors.images) {
                 uploadMessage.value = errors.images;
+                showUploadMessage.value = true;
+                setTimeout(() => {
+                    showUploadMessage.value = false;
+                }, 5000);
             } else {
                 uploadMessage.value = 'Error uploading images. Please try again.';
+                showUploadMessage.value = true;
+                setTimeout(() => {
+                    showUploadMessage.value = false;
+                }, 5000);
             }
-            showUploadMessage.value = true;
-            setTimeout(() => {
-                showUploadMessage.value = false;
-            }, 5000);
         }
     });
 };
@@ -284,6 +293,7 @@ const clearAllImages = () => {
         
         router.post(route('admin.settings.update', 'homepage'), formData, {
             preserveScroll: true,
+            forceFormData: true,
             onSuccess: () => {
                 uploadMessage.value = 'All images removed successfully!';
                 showUploadMessage.value = true;
@@ -306,19 +316,51 @@ const clearAllImages = () => {
 
 
 const updateOrganization = () => {
-    organizationForm.put(route('admin.settings.update', 'organization'));
+    organizationForm.put(route('admin.settings.update', 'organization'), {
+        onError: (errors) => {
+            if (errors.message && errors.message.includes('419')) {
+                alert('Your session has expired. The page will refresh.');
+                window.location.reload();
+            }
+        },
+        preserveScroll: true,
+    });
 };
 
 const updateDonations = () => {
-    donationForm.put(route('admin.settings.update', 'donations'));
+    donationForm.put(route('admin.settings.update', 'donations'), {
+        onError: (errors) => {
+            if (errors.message && errors.message.includes('419')) {
+                alert('Your session has expired. The page will refresh.');
+                window.location.reload();
+            }
+        },
+        preserveScroll: true,
+    });
 };
 
 const updateEmail = () => {
-    emailForm.put(route('admin.settings.update', 'email'));
+    emailForm.put(route('admin.settings.update', 'email'), {
+        onError: (errors) => {
+            if (errors.message && errors.message.includes('419')) {
+                alert('Your session has expired. The page will refresh.');
+                window.location.reload();
+            }
+        },
+        preserveScroll: true,
+    });
 };
 
 const updateSocial = () => {
-    socialForm.put(route('admin.settings.update', 'social'));
+    socialForm.put(route('admin.settings.update', 'social'), {
+        onError: (errors) => {
+            if (errors.message && errors.message.includes('419')) {
+                alert('Your session has expired. The page will refresh.');
+                window.location.reload();
+            }
+        },
+        preserveScroll: true,
+    });
 };
 
 const updateHomepage = () => {
