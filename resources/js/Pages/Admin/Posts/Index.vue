@@ -144,23 +144,15 @@ const formatDate = (date) => {
                     <h1 class="text-2xl font-bold text-gray-900">Blog Posts</h1>
                     <p class="mt-1 text-sm text-gray-600">Manage your blog content</p>
                 </div>
-                <div class="flex items-center space-x-3">
-                    <Link 
-                        :href="route('admin.posts.categories')"
-                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500"
-                    >
-                        Manage Categories
-                    </Link>
-                    <Link 
-                        :href="route('admin.posts.create')"
-                        class="px-4 py-2 text-sm font-medium text-white bg-sky-600 rounded-lg hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500"
-                    >
+                <Link 
+                    :href="route('admin.posts.create')"
+                    class="px-4 py-2 text-sm font-medium text-white bg-sky-600 rounded-lg hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500"
+                >
                         <svg class="w-5 h-5 mr-2 -ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                         </svg>
-                        New Post
-                    </Link>
-                </div>
+                    New Post
+                </Link>
             </div>
         </template>
         
