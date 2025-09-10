@@ -47,7 +47,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="min-h-screen bg-white">
+    <div class="min-h-screen bg-white overflow-x-hidden">
         <!-- Header -->
         <header 
             :class="[
@@ -172,9 +172,9 @@ onUnmounted(() => {
         <!-- Footer -->
         <footer class="bg-gray-900 text-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-6 sm:gap-8">
                     <!-- Organization Info -->
-                    <div>
+                    <div class="lg:col-span-3">
                         <div class="flex items-center space-x-3 mb-4">
                             <img 
                                 src="/images/ustawilogo.jpeg" 
@@ -211,7 +211,7 @@ onUnmounted(() => {
                     </div>
 
                     <!-- What We Do -->
-                    <div>
+                    <div class="lg:col-span-3">
                         <h3 class="text-base font-semibold mb-4">What We Do</h3>
                         <ul class="space-y-2">
                             <li class="flex items-center space-x-2">
@@ -234,7 +234,7 @@ onUnmounted(() => {
                     </div>
 
                     <!-- Quick Links -->
-                    <div>
+                    <div class="lg:col-span-2">
                         <h3 class="text-base font-semibold mb-4">Quick Links</h3>
                         <ul class="space-y-2">
                             <li class="flex items-center space-x-2">
@@ -261,7 +261,7 @@ onUnmounted(() => {
                     </div>
 
                     <!-- Newsletter -->
-                    <div>
+                    <div class="lg:col-span-4">
                         <h3 class="text-base font-semibold mb-4">Newsletter</h3>
                         <p class="text-gray-300 text-sm mb-4">
                             Get updates on our latest programs and community initiatives.

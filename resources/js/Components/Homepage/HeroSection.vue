@@ -133,7 +133,7 @@ watch(isLoading, (newValue) => {
 
 <template>
     <!-- Hero Section -->
-    <section class="relative min-h-screen flex items-center bg-gradient-to-br from-blue-600 via-teal-500 to-green-400 overflow-hidden lg:max-h-screen">
+    <section class="relative min-h-screen bg-gradient-to-br from-blue-600 via-teal-500 to-green-400 overflow-hidden lg:max-h-screen">
         <!-- Background Pattern -->
         <div class="absolute inset-0 opacity-20">
             <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.4) 1px, transparent 0); background-size: 20px 20px;"></div>
@@ -147,17 +147,12 @@ watch(isLoading, (newValue) => {
         <div class="absolute bottom-10 left-10 md:bottom-20 md:left-20 w-24 h-24 md:w-40 md:h-40 bg-blue-400/30 rounded-full blur-xl animate-pulse delay-1000"></div>
         <div class="absolute top-1/2 right-1/4 md:right-1/3 w-16 h-16 md:w-24 md:h-24 bg-teal-300/20 rounded-full blur-2xl animate-pulse delay-500"></div>
         
-        <div class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-16 lg:py-20 xl:py-24">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center w-full">
+        <div class="relative z-10 w-full flex items-center justify-center min-h-screen py-20">
+            <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center w-full">
                 
                 <!-- Left Content -->
-                <div class="text-white space-y-3 sm:space-y-4 md:space-y-5 lg:space-y-6">
-                    <!-- Badge -->
-                    <div class="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 backdrop-blur-sm rounded-full border border-white/30 text-xs sm:text-sm mx-auto lg:mx-0">
-                        <span class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
-                        <span class="font-medium text-white">Making Impact Since 2024</span>
-                    </div>
-
+                <div class="text-white space-y-3 sm:space-y-4 md:space-y-5 lg:space-y-6 md:mt-16 lg:mt-8">
                     <!-- Main Heading -->
                     <div class="space-y-2 sm:space-y-3 md:space-y-4">
                         <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold leading-tight text-center lg:text-left">
@@ -205,7 +200,7 @@ watch(isLoading, (newValue) => {
                 </div>
 
                 <!-- Right Side - Hero Image/Visual -->
-                <div class="relative flex items-center justify-center lg:justify-end mt-6 sm:mt-8 lg:mt-0">
+                <div class="relative flex items-center justify-center lg:justify-end mt-6 sm:mt-8 lg:mt-0 overflow-hidden">
                     <!-- Image Carousel -->
                     <div 
                         v-if="hasImages" 
@@ -321,6 +316,7 @@ watch(isLoading, (newValue) => {
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
         

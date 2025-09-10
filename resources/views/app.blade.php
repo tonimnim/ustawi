@@ -7,6 +7,14 @@
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
+        <!-- Favicon and Logo -->
+        <link rel="icon" type="image/jpeg" href="/app-logo.jpg">
+        <link rel="shortcut icon" type="image/jpeg" href="/app-logo.jpg">
+        <link rel="apple-touch-icon" href="/app-logo.jpg">
+        
+        <!-- Open Graph / Facebook -->
+        <meta property="og:image" content="/app-logo.jpg">
+        
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -16,7 +24,7 @@
         @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
         @inertiaHead
     </head>
-    <body class="font-sans antialiased">
+    <body class="font-sans antialiased overflow-x-hidden">
         @inertia
     </body>
 </html>
