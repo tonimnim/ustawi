@@ -104,7 +104,7 @@ const handleImageUpload = (event) => {
     
     // Validate file types and sizes
     const validFiles = [];
-    const maxSize = 2 * 1024 * 1024; // 2MB
+    const maxSize = 20 * 1024 * 1024; // 20MB
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
     
     files.forEach(file => {
@@ -114,7 +114,7 @@ const handleImageUpload = (event) => {
             return;
         }
         if (file.size > maxSize) {
-            uploadMessage.value = `File ${file.name} exceeds 2MB size limit.`;
+            uploadMessage.value = `File ${file.name} exceeds 20MB size limit.`;
             showUploadMessage.value = true;
             return;
         }
@@ -1070,7 +1070,7 @@ const tabs = [
                                             </p>
                                             <p class="text-xs" :class="homepageImages.length >= 4 ? 'text-gray-400' : 'text-gray-500'">
                                                 <span v-if="homepageImages.length >= 4">Delete an existing image to upload new ones</span>
-                                                <span v-else>PNG, JPG, JPEG (Max. 2MB each)</span>
+                                                <span v-else>PNG, JPG, JPEG (Max. 20MB each)</span>
                                             </p>
                                         </div>
                                         <input 

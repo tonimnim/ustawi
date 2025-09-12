@@ -141,7 +141,7 @@ class SettingsController extends Controller
         try {
             $request->validate([
                 'images' => 'nullable|array',
-                'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+                'images.*' => 'image|mimes:jpeg,png,jpg|max:20480',
                 'existing_images' => 'nullable|string',
             ]);
 
