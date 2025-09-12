@@ -54,6 +54,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::put('/{section}', [SettingsController::class, 'update'])->name('update');
     });
 
+    // Gallery Management
+    Route::prefix('gallery')->name('gallery.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\GalleryController::class, 'index'])->name('index');
+        Route::post('/', [\App\Http\Controllers\Admin\GalleryController::class, 'store'])->name('store');
+        Route::delete('/{id}', [\App\Http\Controllers\Admin\GalleryController::class, 'destroy'])->name('destroy');
+    });
+
     // Placeholder routes for navigation items (will be implemented later)
     Route::get('/pages', function () {
         return inertia('Admin/Pages/Index');

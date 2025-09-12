@@ -25,6 +25,9 @@ Route::get('/donations/status/{donation_number}', [\App\Http\Controllers\Donatio
 Route::get('/blog', [HomeController::class, 'blog'])->name('blog');
 Route::get('/blog/{slug}', [HomeController::class, 'blogPost'])->name('blog.show');
 
+// Gallery route
+Route::get('/gallery', [HomeController::class, 'gallery'])->name('gallery');
+
 // Careers
 Route::get('/careers', [CareersController::class, 'index'])->name('careers');
 Route::post('/careers/apply', [CareersController::class, 'apply'])->name('careers.apply');

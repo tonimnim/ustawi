@@ -236,6 +236,24 @@ class HomeController extends Controller
     }
 
     /**
+     * Display the gallery page.
+     */
+    public function gallery(): Response
+    {
+        $settings = $this->getHomeSettings();
+        
+        // Fetch gallery images from database
+        $images = \DB::table('gallery_images')
+            ->orderByDesc('created_at')
+            ->get();
+        
+        return Inertia::render('Gallery/Index', [
+            'settings' => $settings,
+            'images' => $images,
+        ]);
+    }
+
+    /**
      * Process donation.
      */
     public function processDonation(Request $request): RedirectResponse
