@@ -35,15 +35,15 @@
         <!-- Structured Data for Google -->
         <script type="application/ld+json">
         {
-            "@context": "https://schema.org",
-            "@type": "Organization",
+            "@@context": "https://schema.org",
+            "@@type": "Organization",
             "name": "Ustawi Wa Jamii",
             "alternateName": "Ustawi",
             "url": "{{ url('/') }}",
             "logo": "{{ url('/app-logo.jpg') }}",
             "description": "Community-driven organization dedicated to creating sustainable development and empowering youth through innovative programs and collective action.",
             "address": {
-                "@type": "PostalAddress",
+                "@@type": "PostalAddress",
                 "addressLocality": "Nairobi",
                 "addressCountry": "KE"
             },
