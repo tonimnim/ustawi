@@ -10,6 +10,7 @@ const props = defineProps({
 // Mobile menu state
 const showMobileMenu = ref(false);
 const isScrolled = ref(false);
+const showMediaDropdown = ref(false);
 
 // Navigation items
 const navigation = [
@@ -17,8 +18,13 @@ const navigation = [
     { name: 'About', href: '/#about' },
     { name: 'Programs', href: '/programs' },
     { name: 'Impact', href: '/#impact' },
-    { name: 'News', href: '/#news' },
     { name: 'Contact', href: '/contact' },
+];
+
+// Media dropdown items
+const mediaItems = [
+    { name: 'Blog', href: '/#news' },
+    { name: 'Gallery', href: '/gallery' },
 ];
 
 // Handle scroll for header styling
@@ -28,21 +34,36 @@ const handleScroll = () => {
 
 // Smooth scroll to section
 const scrollToSection = (href) => {
-    if (href.startsWith('#')) {
-        const element = document.querySelector(href);
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-        }
+    // Handle both #section and /#section formats
+    const hash = href.includes('#') ? href.substring(href.indexOf('#')) : href;
+    
+    if (hash.startsWith('#')) {
+        // Small delay to ensure DOM is ready
+        setTimeout(() => {
+            const element = document.querySelector(hash);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }, 100);
     }
     showMobileMenu.value = false;
 };
 
+// Close dropdown when clicking outside
+const closeDropdowns = (event) => {
+    if (!event.target.closest('.media-dropdown')) {
+        showMediaDropdown.value = false;
+    }
+};
+
 onMounted(() => {
     window.addEventListener('scroll', handleScroll);
+    document.addEventListener('click', closeDropdowns);
 });
 
 onUnmounted(() => {
     window.removeEventListener('scroll', handleScroll);
+    document.removeEventListener('click', closeDropdowns);
 });
 </script>
 
@@ -104,6 +125,55 @@ onUnmounted(() => {
                             </button>
                         </template>
                         
+                        <!-- Media Dropdown -->
+                        <div class="relative media-dropdown">
+                            <button
+                                @click.stop="showMediaDropdown = !showMediaDropdown"
+                                :class="[
+                                    'font-medium transition-colors duration-300 hover:text-sky-500 flex items-center',
+                                    isScrolled ? 'text-gray-900' : 'text-white'
+                                ]"
+                            >
+                                Media
+                                <svg class="ml-1 h-4 w-4" :class="showMediaDropdown ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            
+                            <!-- Dropdown Menu -->
+                            <transition
+                                enter-active-class="transition ease-out duration-100"
+                                enter-from-class="transform opacity-0 scale-95"
+                                enter-to-class="transform opacity-100 scale-100"
+                                leave-active-class="transition ease-in duration-75"
+                                leave-from-class="transform opacity-100 scale-100"
+                                leave-to-class="transform opacity-0 scale-95"
+                            >
+                                <div v-if="showMediaDropdown" class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                                    <div class="py-1">
+                                        <template v-for="item in mediaItems" :key="item.name">
+                                            <Link
+                                                v-if="item.href.startsWith('/gallery')"
+                                                :href="item.href"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                                @click="showMediaDropdown = false"
+                                            >
+                                                {{ item.name }}
+                                            </Link>
+                                            <a
+                                                v-else
+                                                :href="item.href"
+                                                @click.prevent="scrollToSection(item.href); showMediaDropdown = false"
+                                                class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer"
+                                            >
+                                                {{ item.name }}
+                                            </a>
+                                        </template>
+                                    </div>
+                                </div>
+                            </transition>
+                        </div>
+                        
                         <!-- Donate Button -->
                         <Link href="/donate" class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg">
                             Donate Now
@@ -153,6 +223,30 @@ onUnmounted(() => {
                                     {{ item.name }}
                                 </button>
                             </template>
+                            
+                            <!-- Media Section in Mobile Menu -->
+                            <div class="border-t border-gray-200 mt-2 pt-2">
+                                <div class="px-3 py-2 text-gray-900 font-medium">Media</div>
+                                <template v-for="item in mediaItems" :key="item.name">
+                                    <Link
+                                        v-if="item.href.startsWith('/gallery')"
+                                        :href="item.href"
+                                        class="block px-6 py-2 text-gray-700 hover:text-sky-500 transition-colors duration-300"
+                                        @click="showMobileMenu = false"
+                                    >
+                                        {{ item.name }}
+                                    </Link>
+                                    <a
+                                        v-else
+                                        :href="item.href"
+                                        @click.prevent="scrollToSection(item.href)"
+                                        class="block w-full text-left px-6 py-2 text-gray-700 hover:text-sky-500 transition-colors duration-300 cursor-pointer"
+                                    >
+                                        {{ item.name }}
+                                    </a>
+                                </template>
+                            </div>
+                            
                             <div class="px-3 py-2">
                                 <Link href="/donate" class="block w-full text-center bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300">
                                     Donate Now
