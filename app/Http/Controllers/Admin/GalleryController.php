@@ -23,15 +23,6 @@ class GalleryController extends Controller
             ->orderByDesc('created_at')
             ->paginate(20);
 
-        // Ensure URLs are properly formatted for Laravel Cloud
-        $images->getCollection()->transform(function ($image) {
-            // If URL doesn't start with http, regenerate it
-            if (!str_starts_with($image->url, 'http')) {
-                $image->url = asset('storage/' . $image->path);
-            }
-            return $image;
-        });
-
         return Inertia::render('Admin/Gallery/Index', [
             'images' => $images,
         ]);
@@ -58,9 +49,8 @@ class GalleryController extends Controller
                 // Store in public disk under gallery folder
                 $path = $uploadedFile->storeAs('gallery', $filename, 'public');
                 
-                // Generate full URL for the image
-                // Use asset() for Laravel Cloud compatibility
-                $url = asset('storage/' . $path);
+                // Generate URL like homepage images use /media/ prefix
+                $url = '/media/' . $path;
                 
                 // Store in database
                 DB::table('gallery_images')->insert([

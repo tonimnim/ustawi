@@ -245,14 +245,7 @@ class HomeController extends Controller
         // Fetch gallery images from database
         $images = \DB::table('gallery_images')
             ->orderByDesc('created_at')
-            ->get()
-            ->map(function ($image) {
-                // Ensure URLs are properly formatted for Laravel Cloud
-                if (!str_starts_with($image->url, 'http')) {
-                    $image->url = asset('storage/' . $image->path);
-                }
-                return $image;
-            });
+            ->get();
         
         return Inertia::render('Gallery/Index', [
             'settings' => $settings,

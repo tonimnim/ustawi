@@ -16,7 +16,7 @@ class StorageController extends Controller
         \Log::info('StorageController serving: ' . $path);
         
         // Security check - only allow certain directories
-        $allowedPrefixes = ['homepage/', 'media/', 'careers/', 'posts/'];
+        $allowedPrefixes = ['homepage/', 'media/', 'careers/', 'posts/', 'gallery/'];
         $isAllowed = false;
         
         foreach ($allowedPrefixes as $prefix) {
