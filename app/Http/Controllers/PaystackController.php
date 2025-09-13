@@ -157,6 +157,7 @@ class PaystackController extends Controller
                 'amount' => $amount,
                 'email' => $email,
                 'currency' => $donation->currency,
+                'reference' => $donation->donation_number,
                 'mobile_money' => [
                     'phone' => $phone,
                     'provider' => 'mpesa'
