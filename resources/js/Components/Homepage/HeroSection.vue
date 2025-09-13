@@ -38,7 +38,7 @@ const preloadImages = () => {
     
     props.settings.homepage_images.forEach((image, index) => {
         const img = new Image();
-        const imageUrl = `/media/${image.path || 'homepage/' + image.filename}`;
+        const imageUrl = image.url || `/storage/${image.path || 'homepage/' + image.filename}`;
         
         img.onload = () => {
             loadedCount++;
@@ -171,7 +171,7 @@ watch(isLoading, (newValue) => {
                     }"
                 >
                     <img 
-                        :src="image.url || `/media/${image.path || 'homepage/' + image.filename}`"
+                        :src="image.url || `/storage/${image.path || 'homepage/' + image.filename}`"
                         :alt="`${settings.organization_name} - Image ${index + 1}`"
                         class="w-full h-full object-cover"
                     />

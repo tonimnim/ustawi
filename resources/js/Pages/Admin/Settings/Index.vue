@@ -1098,7 +1098,7 @@ const tabs = [
                                 >
                                     <div class="aspect-w-16 aspect-h-9 w-full overflow-hidden rounded-lg bg-gray-100">
                                         <img 
-                                            :src="image.preview || `/media/${image.path || 'homepage/' + image.filename}`" 
+                                            :src="image.preview || image.url || `/storage/${image.path || 'homepage/' + image.filename}`" 
                                             :alt="`Homepage image ${image.id}`"
                                             class="w-full h-32 object-cover rounded-lg"
                                         >
@@ -1133,7 +1133,7 @@ const tabs = [
                                 <div class="relative aspect-w-16 aspect-h-9">
                                     <img 
                                         v-if="homepageImages[currentPreviewIndex]"
-                                        :src="homepageImages[currentPreviewIndex].preview || `/media/${homepageImages[currentPreviewIndex].path || 'homepage/' + homepageImages[currentPreviewIndex].filename}`" 
+                                        :src="homepageImages[currentPreviewIndex].preview || homepageImages[currentPreviewIndex].url || `/storage/${homepageImages[currentPreviewIndex].path || 'homepage/' + homepageImages[currentPreviewIndex].filename}`" 
                                         alt="Homepage preview"
                                         class="w-full h-64 md:h-96 object-cover"
                                     >
