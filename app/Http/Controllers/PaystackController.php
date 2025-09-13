@@ -121,16 +121,26 @@ class PaystackController extends Controller
                     ->with('error', 'Phone number is required for M-Pesa payments.');
             }
             
-            // Strip any non-numeric characters first
+            // Strip any non-numeric characters and spaces first
             $phone = preg_replace('/[^0-9]/', '', $phone);
             
-            // Format phone number for Paystack (no + prefix)
+            // Format phone number for Paystack (needs + prefix for charge endpoint)
             if (substr($phone, 0, 1) === '0') {
-                $phone = '254' . substr($phone, 1);
-            } elseif (substr($phone, 0, 3) !== '254') {
-                $phone = '254' . $phone;
+                // Convert 07XX to +2547XX
+                $phone = '+254' . substr($phone, 1);
+            } elseif (substr($phone, 0, 3) === '254') {
+                // Add + to 254XX
+                $phone = '+' . $phone;
+            } elseif (strlen($phone) === 9 && substr($phone, 0, 1) === '7') {
+                // Handle 7XXXXXXXX format
+                $phone = '+254' . $phone;
+            } elseif (strlen($phone) === 9 && substr($phone, 0, 1) === '1') {
+                // Handle 1XXXXXXXX format (landline)
+                $phone = '+254' . $phone;
+            } else {
+                // Assume it needs 254 prefix
+                $phone = '+254' . $phone;
             }
-            // If already starts with 254, use as is
             
             \Log::info('Initiating M-Pesa payment', [
                 'phone' => $phone,
@@ -180,8 +190,22 @@ class PaystackController extends Controller
             
             // Check if the request was successful (HTTP level)
             if (!$response->successful()) {
+                \Log::error('M-Pesa charge request failed', [
+                    'status' => $response->status(),
+                    'response' => $response->json(),
+                    'phone' => $phone
+                ]);
+                
                 if ($response->status() === 400) {
-                    throw new \Exception('Payment failed. Please enter a valid Kenyan phone number (254XXXXXXXXX)');
+                    $errorResponse = $response->json();
+                    $errorMessage = $errorResponse['message'] ?? 'Invalid request';
+                    
+                    // Check if it's a phone number issue
+                    if (stripos($errorMessage, 'phone') !== false || stripos($errorMessage, 'mobile') !== false) {
+                        throw new \Exception('Invalid phone number. Please use formats like 0712345678, 254712345678, or +254712345678');
+                    }
+                    
+                    throw new \Exception('Payment failed: ' . $errorMessage);
                 }
                 throw new \Exception('Payment initialization failed. Please try again.');
             }
