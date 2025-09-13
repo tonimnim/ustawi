@@ -247,7 +247,7 @@ const teamMembers = [
         
         <div class="relative z-10">
             <!-- Section Header -->
-            <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center mb-20" :class="{ 'opacity-0 -translate-y-10': !isVisible, 'opacity-100 translate-y-0 transition-all duration-1000': isVisible }">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center mb-8" :class="{ 'opacity-0 -translate-y-10': !isVisible, 'opacity-100 translate-y-0 transition-all duration-1000': isVisible }">
                 <h2 class="text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
                     What We Do
                 </h2>
@@ -361,9 +361,8 @@ const teamMembers = [
             </div>
 
             <!-- Team Leadership Section -->
-            <div class="max-w-7xl mx-auto px-6 lg:px-8 mt-32">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8 mt-16">
                 <div class="text-center mb-16" :class="{ 'opacity-0 -translate-y-10': !isVisible, 'opacity-100 translate-y-0 transition-all duration-1000 delay-700': isVisible }">
-                    <span class="inline-block text-4xl mb-6">👥</span>
                     <h3 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">Our Leadership Team</h3>
                     <p class="text-xl text-gray-600">Meet the dedicated leaders driving our mission forward</p>
                 </div>
@@ -398,7 +397,7 @@ const teamMembers = [
             </div>
 
             <!-- Bottom CTA -->
-            <div class="max-w-7xl mx-auto px-6 lg:px-8 mt-24" :class="{ 'opacity-0': !isVisible, 'opacity-100 transition-opacity duration-1000 delay-1000': isVisible }">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8 mt-8" :class="{ 'opacity-0': !isVisible, 'opacity-100 transition-opacity duration-1000 delay-1000': isVisible }">
                 <div class="bg-gradient-to-r from-blue-600 via-teal-600 to-green-600 rounded-3xl p-16 text-white relative overflow-hidden shadow-2xl">
                     <div class="absolute inset-0 bg-black/10"></div>
                     <div class="relative z-10 text-center">

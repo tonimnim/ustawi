@@ -58,7 +58,10 @@ const categories = {
                     "Indigenous tree nursery establishment",
                     "Agroforestry training for farmers"
                 ],
-                image: "/assets/treeplanting.JPG"
+                images: [
+                    "/assets/treeplanting.JPG",
+                    "https://res.cloudinary.com/dpbheqr2n/image/upload/v1757670896/tree_campaign_p0orad.jpg"
+                ]
             },
             {
                 id: 'waste-to-art',
@@ -73,7 +76,7 @@ const categories = {
                     "Community art exhibitions",
                     "Marketing support for eco-artists"
                 ],
-                image: "https://i.imgur.com/r193IMM.jpeg"
+                image: "https://res.cloudinary.com/dpbheqr2n/image/upload/v1757670515/waste_to_art_wndver.jpg"
             },
             {
                 id: 'community-cleanup',
@@ -127,6 +130,7 @@ const categories = {
                     "Referrals to pro bono lawyers"
                 ],
                 images: [
+                    "https://res.cloudinary.com/dpbheqr2n/image/upload/v1757670557/Community_Paralegal_ubccns.jpg",
                     "/assets/Economic Empowerment & Food Security1.jpeg",
                     "/assets/Economic Empowerment & Food Security2.jpeg",
                     "/assets/Economic Empowerment & Food Security3.jpeg",
