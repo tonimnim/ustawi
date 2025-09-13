@@ -158,13 +158,8 @@ class SettingsController extends Controller
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $file) {
                 if ($file && $file->isValid()) {
-                    // Generate unique filename
                     $filename = time() . '_' . $index . '_' . str_replace(' ', '_', $file->getClientOriginalName());
-                    
-                    // Store in public disk (now the bucket) under homepage directory
                     $path = $file->storeAs('homepage', $filename, 'public');
-                    
-                    // Generate full URL from bucket
                     $url = \Storage::disk('public')->url($path);
                     
                     $uploadedImages[] = [

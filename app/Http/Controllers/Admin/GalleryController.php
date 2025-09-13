@@ -23,9 +23,7 @@ class GalleryController extends Controller
             ->orderByDesc('created_at')
             ->paginate(20);
 
-        // Ensure URLs point to bucket for all images
         $images->getCollection()->transform(function ($image) {
-            // If URL doesn't start with https (bucket URL), regenerate it
             if (!str_starts_with($image->url, 'https://')) {
                 $image->url = Storage::disk('public')->url($image->path);
             }
@@ -42,26 +40,19 @@ class GalleryController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        // Increase execution time for large uploads
-        set_time_limit(120); // 120 seconds (2 minutes)
+        set_time_limit(120);
         
         $validated = $request->validate([
             'images' => 'required|array',
-            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:20480', // 20MB max per image
+            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
         ]);
 
         try {
             foreach ($request->file('images') as $uploadedFile) {
-                // Generate unique filename
                 $filename = Str::uuid() . '.' . $uploadedFile->getClientOriginalExtension();
-                
-                // Store in public disk (now the bucket) under gallery folder
                 $path = $uploadedFile->storeAs('gallery', $filename, 'public');
-                
-                // Generate full URL from bucket
                 $url = Storage::disk('public')->url($path);
                 
-                // Store in database
                 DB::table('gallery_images')->insert([
                     'filename' => $filename,
                     'path' => $path,
@@ -95,12 +86,10 @@ class GalleryController extends Controller
         }
 
         try {
-            // Delete from storage
             if (Storage::disk('public')->exists($image->path)) {
                 Storage::disk('public')->delete($image->path);
             }
 
-            // Delete from database
             DB::table('gallery_images')->where('id', $id)->delete();
 
             return redirect()->route('admin.gallery.index')
