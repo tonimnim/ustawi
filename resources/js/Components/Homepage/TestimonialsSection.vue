@@ -104,7 +104,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <section class="py-20 bg-gradient-to-b from-white to-gray-50 overflow-hidden">
+    <section class="py-8 bg-gradient-to-b from-white to-gray-50 overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
             <!-- Section Header -->
             <div class="text-center">
