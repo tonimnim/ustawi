@@ -121,14 +121,16 @@ class PaystackController extends Controller
                     ->with('error', 'Phone number is required for M-Pesa payments.');
             }
             
-            // Format phone number: remove leading 0 and add +254
+            // Strip any non-numeric characters first
+            $phone = preg_replace('/[^0-9]/', '', $phone);
+            
+            // Format phone number for Paystack (no + prefix)
             if (substr($phone, 0, 1) === '0') {
-                $phone = '+254' . substr($phone, 1);
+                $phone = '254' . substr($phone, 1);
             } elseif (substr($phone, 0, 3) !== '254') {
-                $phone = '+254' . $phone;
-            } elseif (substr($phone, 0, 3) === '254') {
-                $phone = '+' . $phone;
+                $phone = '254' . $phone;
             }
+            // If already starts with 254, use as is
             
             \Log::info('Initiating M-Pesa payment', [
                 'phone' => $phone,
@@ -178,7 +180,10 @@ class PaystackController extends Controller
             
             // Check if the request was successful (HTTP level)
             if (!$response->successful()) {
-                throw new \Exception('HTTP request failed: ' . $response->status());
+                if ($response->status() === 400) {
+                    throw new \Exception('Payment failed. Please enter a valid Kenyan phone number (254XXXXXXXXX)');
+                }
+                throw new \Exception('Payment initialization failed. Please try again.');
             }
             
             // Handle different response statuses
@@ -475,18 +480,45 @@ class PaystackController extends Controller
      */
     private function handleChargeFailed($data)
     {
+        \Log::info('Processing failed charge webhook', [
+            'reference' => $data->reference ?? null,
+            'message' => $data->message ?? null,
+            'gateway_response' => $data->gateway_response ?? null
+        ]);
+
         $donation = DB::table('donations')
             ->where('donation_number', $data->reference)
             ->first();
 
-        if ($donation && $donation->status !== 'failed') {
+        if ($donation && $donation->status !== 'failed' && $donation->status !== 'cancelled') {
+            // Determine if it was cancelled or failed
+            $message = $data->message ?? '';
+            $gatewayResponse = $data->gateway_response ?? '';
+            
+            // Check for cancellation indicators
+            $isCancelled = (
+                stripos($message, 'cancelled') !== false ||
+                stripos($message, 'canceled') !== false ||
+                stripos($message, 'user abort') !== false ||
+                stripos($message, 'user declined') !== false ||
+                stripos($gatewayResponse, 'cancelled') !== false ||
+                stripos($gatewayResponse, 'user_cancelled') !== false
+            );
+            
+            $status = $isCancelled ? 'cancelled' : 'failed';
+            
             DB::table('donations')
                 ->where('id', $donation->id)
                 ->update([
-                    'status' => 'failed',
+                    'status' => $status,
                     'gateway_response' => json_encode($data),
                     'updated_at' => now()
                 ]);
+                
+            \Log::info('Donation marked as ' . $status, [
+                'donation_id' => $donation->id,
+                'reference' => $data->reference
+            ]);
         }
     }
 }
