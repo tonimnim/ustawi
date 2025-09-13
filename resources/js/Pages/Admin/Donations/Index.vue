@@ -276,9 +276,6 @@ const getDonorTypeBadge = (type) => {
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Date
                                 </th>
-                                <th class="relative px-6 py-3">
-                                    <span class="sr-only">Actions</span>
-                                </th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -317,10 +314,6 @@ const getDonorTypeBadge = (type) => {
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {{ formatDate(donation.date) }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <button class="text-blue-600 hover:text-blue-900 mr-3">View</button>
-                                    <button class="text-gray-600 hover:text-gray-900">Receipt</button>
                                 </td>
                             </tr>
                         </tbody>

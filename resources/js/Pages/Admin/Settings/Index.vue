@@ -379,8 +379,6 @@ const removeDefaultAmount = (index) => {
 const tabs = [
     { id: 'organization', name: 'Organization', icon: 'M2.25 21h19.5m-18-18v18m0-3.5h.008v.008H3.75V16.5zm0-3.5h.008v.008H3.75V13zm0-3.5h.008v.008H3.75V9.5zm0-3.5h.008v.008H3.75V6zm0-3.5h.008v.008H3.75V2.5zm6.75 18v-18m0 3.5h.008v.008h-.008V5.5zm0 3.5h.008v.008h-.008V9zm0 3.5h.008v.008h-.008v-.008zm0 3.5h.008v.008h-.008V16zm6.75 3v-18m0 3.5h.008v.008h-.008V5.5zm0 3.5h.008v.008h-.008V9zm0 3.5h.008v.008h-.008v-.008zm0 3.5h.008v.008h-.008V16zm6.75 3v-18m0 3.5h.008v.008H20.25V5.5zm0 3.5h.008v.008H20.25V9zm0 3.5h.008v.008H20.25v-.008zm0 3.5h.008v.008H20.25V16z' },
     { id: 'donations', name: 'Donations', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
-    { id: 'email', name: 'Email', icon: 'M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75' },
-    { id: 'social', name: 'Social Media', icon: 'M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z' },
     { id: 'homepage', name: 'Homepage', icon: 'M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25' },
 ];
 </script>
@@ -595,8 +593,8 @@ const tabs = [
                 </form>
             </div>
 
-            <!-- Email Settings Tab -->
-            <div v-if="activeTab === 'email'" class="space-y-6">
+            <!-- Email Settings Tab (Removed) -->
+            <div v-if="false" class="space-y-6">
                 <form @submit.prevent="updateEmail" class="bg-white shadow-sm rounded-lg border border-gray-200">
                     <div class="px-6 py-4 border-b border-gray-200">
                         <h3 class="text-lg font-semibold text-gray-900">Email Configuration</h3>
@@ -841,8 +839,8 @@ const tabs = [
                 </form>
             </div>
 
-            <!-- Social Media Settings Tab -->
-            <div v-if="activeTab === 'social'" class="space-y-6">
+            <!-- Social Media Settings Tab (Removed) -->
+            <div v-if="false" class="space-y-6">
                 <form @submit.prevent="updateSocial" class="bg-white shadow-sm rounded-lg border border-gray-200">
                     <div class="px-6 py-4 border-b border-gray-200">
                         <h3 class="text-lg font-semibold text-gray-900">Social Media Links</h3>

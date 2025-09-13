@@ -108,9 +108,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     });
 
 
-    Route::get('/payments', function () {
-        return inertia('Admin/Payments/Index');
-    })->name('payments.index');
 
     // User Management
     Route::prefix('users')->name('users.')->group(function () {
