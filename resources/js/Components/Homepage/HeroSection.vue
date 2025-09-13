@@ -171,7 +171,7 @@ watch(isLoading, (newValue) => {
                     }"
                 >
                     <img 
-                        :src="`/media/${image.path || 'homepage/' + image.filename}`"
+                        :src="image.url || `/media/${image.path || 'homepage/' + image.filename}`"
                         :alt="`${settings.organization_name} - Image ${index + 1}`"
                         class="w-full h-full object-cover"
                     />

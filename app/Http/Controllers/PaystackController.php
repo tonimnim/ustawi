@@ -353,19 +353,34 @@ class PaystackController extends Controller
      */
     public function webhook(Request $request)
     {
+        // Log incoming webhook for debugging
+        \Log::info('Paystack webhook received', [
+            'headers' => $request->headers->all(),
+            'ip' => $request->ip(),
+            'url' => $request->fullUrl()
+        ]);
+
         // Verify webhook signature
         $signature = $request->header('x-paystack-signature');
         $payload = $request->getContent();
         $computed = hash_hmac('sha512', $payload, config('paystack.secretKey'));
 
         if ($signature !== $computed) {
-            \Log::warning('Invalid Paystack webhook signature');
+            \Log::warning('Invalid Paystack webhook signature', [
+                'received' => $signature,
+                'computed' => $computed
+            ]);
             return response('Unauthorized', 401);
         }
 
         $event = json_decode($payload);
         
-        \Log::info('Paystack webhook received', ['event' => $event->event]);
+        \Log::info('Paystack webhook event', [
+            'event' => $event->event,
+            'reference' => $event->data->reference ?? null,
+            'amount' => $event->data->amount ?? null,
+            'status' => $event->data->status ?? null
+        ]);
 
         switch ($event->event) {
             case 'charge.success':
@@ -388,40 +403,70 @@ class PaystackController extends Controller
      */
     private function handleChargeSuccess($data)
     {
+        \Log::info('Processing successful charge webhook', [
+            'reference' => $data->reference,
+            'amount' => $data->amount,
+            'id' => $data->id
+        ]);
+
         $donation = DB::table('donations')
             ->where('donation_number', $data->reference)
             ->first();
 
-        if ($donation && $donation->status !== 'completed') {
-            DB::table('donations')
-                ->where('id', $donation->id)
-                ->update([
-                    'status' => 'completed',
-                    'gateway_response' => json_encode($data),
-                    'processed_at' => now(),
-                    'updated_at' => now()
-                ]);
+        if (!$donation) {
+            \Log::error('Donation not found for successful charge', [
+                'reference' => $data->reference
+            ]);
+            return;
+        }
 
-            // Record transaction if not already recorded
-            $existingTransaction = DB::table('payment_transactions')
-                ->where('gateway_transaction_id', $data->id)
-                ->first();
+        if ($donation->status === 'completed') {
+            \Log::info('Donation already marked as completed', [
+                'donation_id' => $donation->id
+            ]);
+            return;
+        }
 
-            if (!$existingTransaction) {
-                DB::table('payment_transactions')->insert([
-                    'donation_id' => $donation->id,
-                    'transaction_type' => 'payment',
-                    'gateway' => 'paystack',
-                    'gateway_transaction_id' => $data->id,
-                    'amount' => $data->amount / 100,
-                    'currency' => $data->currency,
-                    'status' => 'completed',
-                    'gateway_data' => json_encode($data),
-                    'processed_at' => now(),
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]);
-            }
+        // Update donation status
+        DB::table('donations')
+            ->where('id', $donation->id)
+            ->update([
+                'status' => 'completed',
+                'gateway_response' => json_encode($data),
+                'processed_at' => now(),
+                'updated_at' => now()
+            ]);
+
+        \Log::info('Donation marked as completed', [
+            'donation_id' => $donation->id,
+            'amount' => $donation->amount,
+            'donor' => $donation->donor_name
+        ]);
+
+        // Record transaction if not already recorded
+        $existingTransaction = DB::table('payment_transactions')
+            ->where('gateway_transaction_id', $data->id)
+            ->first();
+
+        if (!$existingTransaction) {
+            DB::table('payment_transactions')->insert([
+                'donation_id' => $donation->id,
+                'transaction_type' => 'payment',
+                'gateway' => 'paystack',
+                'gateway_transaction_id' => $data->id,
+                'amount' => $data->amount / 100,
+                'currency' => $data->currency,
+                'status' => 'completed',
+                'gateway_data' => json_encode($data),
+                'processed_at' => now(),
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+            
+            \Log::info('Payment transaction recorded', [
+                'donation_id' => $donation->id,
+                'transaction_id' => $data->id
+            ]);
         }
     }
 

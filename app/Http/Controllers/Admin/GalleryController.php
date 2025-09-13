@@ -23,6 +23,15 @@ class GalleryController extends Controller
             ->orderByDesc('created_at')
             ->paginate(20);
 
+        // Ensure URLs point to bucket for all images
+        $images->getCollection()->transform(function ($image) {
+            // If URL doesn't start with https (bucket URL), regenerate it
+            if (!str_starts_with($image->url, 'https://')) {
+                $image->url = Storage::disk('public')->url($image->path);
+            }
+            return $image;
+        });
+
         return Inertia::render('Admin/Gallery/Index', [
             'images' => $images,
         ]);
@@ -46,11 +55,11 @@ class GalleryController extends Controller
                 // Generate unique filename
                 $filename = Str::uuid() . '.' . $uploadedFile->getClientOriginalExtension();
                 
-                // Store in public disk under gallery folder
+                // Store in public disk (now the bucket) under gallery folder
                 $path = $uploadedFile->storeAs('gallery', $filename, 'public');
                 
-                // Generate URL like homepage images use /media/ prefix
-                $url = '/media/' . $path;
+                // Generate full URL from bucket
+                $url = Storage::disk('public')->url($path);
                 
                 // Store in database
                 DB::table('gallery_images')->insert([

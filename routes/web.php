@@ -21,6 +21,11 @@ Route::get('/donations/callback', [\App\Http\Controllers\PaystackController::cla
 Route::post('/paystack/webhook', [\App\Http\Controllers\PaystackController::class, 'webhook'])->name('paystack.webhook');
 Route::get('/donations/status/{donation_number}', [\App\Http\Controllers\DonationStatusController::class, 'checkStatus'])->name('donations.status');
 
+// Webhook testing routes (remove in production)
+Route::get('/webhook/test', [\App\Http\Controllers\WebhookTestController::class, 'test'])->name('webhook.test');
+Route::post('/webhook/test', [\App\Http\Controllers\WebhookTestController::class, 'test']);
+Route::get('/donations/verify/{reference}', [\App\Http\Controllers\WebhookTestController::class, 'verifyPayment'])->name('donations.verify');
+
 // Blog routes
 Route::get('/blog', [HomeController::class, 'blog'])->name('blog');
 Route::get('/blog/{slug}', [HomeController::class, 'blogPost'])->name('blog.show');

@@ -245,7 +245,14 @@ class HomeController extends Controller
         // Fetch gallery images from database
         $images = \DB::table('gallery_images')
             ->orderByDesc('created_at')
-            ->get();
+            ->get()
+            ->map(function ($image) {
+                // Ensure URLs point to bucket for all images
+                if (!str_starts_with($image->url, 'https://')) {
+                    $image->url = \Storage::disk('public')->url($image->path);
+                }
+                return $image;
+            });
         
         return Inertia::render('Gallery/Index', [
             'settings' => $settings,

@@ -65,7 +65,8 @@ let observer = null;
 
 onMounted(() => {
     observer = new IntersectionObserver(observerCallback, {
-        threshold: 0.3
+        threshold: 0.1,  // Lower threshold for mobile - triggers when 10% visible
+        rootMargin: '50px'  // Start observing 50px before element comes into view
     });
     
     const section = document.querySelector('#impact');
@@ -83,9 +84,9 @@ onUnmounted(() => {
 
 <template>
     <section id="impact" class="relative py-12 sm:py-16 lg:py-24 bg-gradient-to-br from-blue-600 via-sky-500 to-blue-400 overflow-hidden">
-        <!-- Decorative elements -->
-        <div class="absolute top-0 left-0 w-48 h-48 sm:w-72 sm:h-72 lg:w-96 lg:h-96 bg-white/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-        <div class="absolute bottom-0 right-0 w-48 h-48 sm:w-72 sm:h-72 lg:w-96 lg:h-96 bg-white/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+        <!-- Decorative elements - hidden on mobile for performance -->
+        <div class="hidden sm:block absolute top-0 left-0 w-72 h-72 lg:w-96 lg:h-96 bg-white/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+        <div class="hidden sm:block absolute bottom-0 right-0 w-72 h-72 lg:w-96 lg:h-96 bg-white/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
         <div class="absolute inset-0 opacity-10">
             <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.2) 1px, transparent 0); background-size: 40px 40px;"></div>
         </div>
@@ -104,7 +105,7 @@ onUnmounted(() => {
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10 sm:mb-12 lg:mb-16">
                 <!-- Beneficiaries Served -->
                 <div class="group" :class="{ 'opacity-0 translate-y-10': !isVisible, 'opacity-100 translate-y-0 transition-all duration-1000': isVisible }">
-                    <div class="bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 h-full transition-all duration-300 hover:bg-white/30 hover:scale-105 hover:shadow-2xl">
+                    <div class="bg-white/20 sm:backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 h-full transition-all duration-300 hover:bg-white/30 hover:scale-105 hover:shadow-2xl">
                         <div class="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-white/30 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 lg:mb-6 group-hover:rotate-6 transition-transform duration-300">
                             <svg class="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -118,44 +119,44 @@ onUnmounted(() => {
 
                 <!-- Projects Completed -->
                 <div class="group" :class="{ 'opacity-0 translate-y-10': !isVisible, 'opacity-100 translate-y-0 transition-all duration-1000 delay-100': isVisible }">
-                    <div class="bg-white/20 backdrop-blur-sm rounded-2xl p-8 h-full transition-all duration-300 hover:bg-white/30 hover:scale-105 hover:shadow-2xl">
-                        <div class="w-20 h-20 bg-white/30 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:rotate-6 transition-transform duration-300">
-                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="bg-white/20 sm:backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 h-full transition-all duration-300 hover:bg-white/30 hover:scale-105 hover:shadow-2xl">
+                        <div class="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-white/30 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 lg:mb-6 group-hover:rotate-6 transition-transform duration-300">
+                            <svg class="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                             </svg>
                         </div>
-                        <div class="text-4xl lg:text-5xl font-bold text-white mb-3">{{ counters.projects }}+</div>
-                        <div class="text-white text-lg font-semibold mb-1">Projects Completed</div>
-                        <div class="text-white/80 text-sm">Successfully implemented</div>
+                        <div class="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-white mb-1 sm:mb-2 lg:mb-3">{{ counters.projects }}+</div>
+                        <div class="text-white text-sm sm:text-base lg:text-lg font-semibold">Projects Completed</div>
+                        <div class="text-white/80 text-xs sm:text-sm hidden sm:block">Successfully implemented</div>
                     </div>
                 </div>
 
                 <!-- Counties Reached -->
                 <div class="group" :class="{ 'opacity-0 translate-y-10': !isVisible, 'opacity-100 translate-y-0 transition-all duration-1000 delay-200': isVisible }">
-                    <div class="bg-white/20 backdrop-blur-sm rounded-2xl p-8 h-full transition-all duration-300 hover:bg-white/30 hover:scale-105 hover:shadow-2xl">
-                        <div class="w-20 h-20 bg-white/30 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:rotate-6 transition-transform duration-300">
-                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="bg-white/20 sm:backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 h-full transition-all duration-300 hover:bg-white/30 hover:scale-105 hover:shadow-2xl">
+                        <div class="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-white/30 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 lg:mb-6 group-hover:rotate-6 transition-transform duration-300">
+                            <svg class="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                             </svg>
                         </div>
-                        <div class="text-4xl lg:text-5xl font-bold text-white mb-3">{{ counters.counties }}</div>
-                        <div class="text-white text-lg font-semibold mb-1">Counties Reached</div>
-                        <div class="text-white/80 text-sm">Locations Reached</div>
+                        <div class="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-white mb-1 sm:mb-2 lg:mb-3">{{ counters.counties }}</div>
+                        <div class="text-white text-sm sm:text-base lg:text-lg font-semibold">Counties Reached</div>
+                        <div class="text-white/80 text-xs sm:text-sm hidden sm:block">Locations Reached</div>
                     </div>
                 </div>
 
                 <!-- Years Active -->
                 <div class="group" :class="{ 'opacity-0 translate-y-10': !isVisible, 'opacity-100 translate-y-0 transition-all duration-1000 delay-300': isVisible }">
-                    <div class="bg-white/20 backdrop-blur-sm rounded-2xl p-8 h-full transition-all duration-300 hover:bg-white/30 hover:scale-105 hover:shadow-2xl">
-                        <div class="w-20 h-20 bg-white/30 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:rotate-6 transition-transform duration-300">
-                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="bg-white/20 sm:backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 h-full transition-all duration-300 hover:bg-white/30 hover:scale-105 hover:shadow-2xl">
+                        <div class="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-white/30 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 lg:mb-6 group-hover:rotate-6 transition-transform duration-300">
+                            <svg class="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
-                        <div class="text-4xl lg:text-5xl font-bold text-white mb-3">{{ counters.years }}+</div>
-                        <div class="text-white text-lg font-semibold mb-1">Years Active</div>
-                        <div class="text-white/80 text-sm">Making a difference</div>
+                        <div class="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-white mb-1 sm:mb-2 lg:mb-3">{{ counters.years }}+</div>
+                        <div class="text-white text-sm sm:text-base lg:text-lg font-semibold">Years Active</div>
+                        <div class="text-white/80 text-xs sm:text-sm hidden sm:block">Making a difference</div>
                     </div>
                 </div>
             </div>
@@ -178,27 +179,27 @@ onUnmounted(() => {
                     </div>
 
                     <!-- Community Development -->
-                    <div class="bg-white rounded-xl p-8 text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
-                        <div class="h-48 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center mb-6">
-                            <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="bg-white rounded-xl p-6 sm:p-8 text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
+                        <div class="h-32 sm:h-40 lg:h-48 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center mb-4 sm:mb-6">
+                            <svg class="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
-                        <h4 class="text-xl font-bold text-gray-900 mb-3">Community Development</h4>
-                        <p class="text-gray-600 mb-4">Implementing sustainable development projects that create lasting change in communities.</p>
-                        <div class="text-green-500 font-semibold">30+ Communities</div>
+                        <h4 class="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">Community Development</h4>
+                        <p class="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4">Implementing sustainable development projects that create lasting change in communities.</p>
+                        <div class="text-green-500 font-semibold text-sm sm:text-base">30+ Communities</div>
                     </div>
 
                     <!-- Innovation Hub -->
-                    <div class="bg-white rounded-xl p-8 text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
-                        <div class="h-48 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center mb-6">
-                            <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="bg-white rounded-xl p-6 sm:p-8 text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
+                        <div class="h-32 sm:h-40 lg:h-48 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center mb-4 sm:mb-6">
+                            <svg class="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                             </svg>
                         </div>
-                        <h4 class="text-xl font-bold text-gray-900 mb-3">Innovation Hub</h4>
-                        <p class="text-gray-600 mb-4">Fostering innovation and creative solutions to address community challenges.</p>
-                        <div class="text-purple-500 font-semibold">15+ Innovations</div>
+                        <h4 class="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">Innovation Hub</h4>
+                        <p class="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4">Fostering innovation and creative solutions to address community challenges.</p>
+                        <div class="text-purple-500 font-semibold text-sm sm:text-base">15+ Innovations</div>
                     </div>
                 </div>
             </div>

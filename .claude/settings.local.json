@@ -15,7 +15,8 @@
       "Read(/C:\\Users\\OMOTECH\\ustawi\\database\\migrations/**)",
       "Read(/C:\\Users\\OMOTECH\\ustawi/**)",
       "Read(/C:\\Users\\OMOTECH\\ustawi\\resources\\js\\Pages\\Homepage/**)",
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "Bash(composer:*)"
     ],
     "deny": []
   }

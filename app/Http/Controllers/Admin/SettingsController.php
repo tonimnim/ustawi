@@ -161,13 +161,17 @@ class SettingsController extends Controller
                     // Generate unique filename
                     $filename = time() . '_' . $index . '_' . str_replace(' ', '_', $file->getClientOriginalName());
                     
-                    // Store in public/storage/homepage directory
+                    // Store in public disk (now the bucket) under homepage directory
                     $path = $file->storeAs('homepage', $filename, 'public');
+                    
+                    // Generate full URL from bucket
+                    $url = \Storage::disk('public')->url($path);
                     
                     $uploadedImages[] = [
                         'id' => uniqid() . '_' . time(),
                         'filename' => $filename,
                         'path' => $path,
+                        'url' => $url,
                         'original_name' => $file->getClientOriginalName(),
                         'uploaded_at' => now()->toISOString(),
                     ];
@@ -204,10 +208,7 @@ class SettingsController extends Controller
         if (count($allImages) > 4) {
             // Clean up any uploaded images if limit exceeded
             foreach ($uploadedImages as $uploaded) {
-                $filePath = storage_path('app/public/' . $uploaded['path']);
-                if (file_exists($filePath)) {
-                    unlink($filePath);
-                }
+                \Storage::disk('public')->delete($uploaded['path']);
             }
             return back()->withErrors(['images' => 'Maximum 4 images allowed on homepage.']);
         }
@@ -215,22 +216,16 @@ class SettingsController extends Controller
         // Save updated images list
         $this->updateSetting('homepage_images', $allImages);
 
-        // Clean up removed image files
+        // Clean up removed image files from bucket
         if (!empty($currentImages)) {
             foreach ($currentImages as $currentImage) {
                 if (isset($currentImage['id']) && !in_array($currentImage['id'], $existingImages)) {
-                    // Delete the file from storage
+                    // Delete the file from storage bucket
                     if (isset($currentImage['path'])) {
-                        $filePath = storage_path('app/public/' . $currentImage['path']);
-                        if (file_exists($filePath)) {
-                            unlink($filePath);
-                        }
+                        \Storage::disk('public')->delete($currentImage['path']);
                     } elseif (isset($currentImage['filename'])) {
                         // Fallback to filename if path not set
-                        $filePath = storage_path('app/public/homepage/' . $currentImage['filename']);
-                        if (file_exists($filePath)) {
-                            unlink($filePath);
-                        }
+                        \Storage::disk('public')->delete('homepage/' . $currentImage['filename']);
                     }
                 }
             }
