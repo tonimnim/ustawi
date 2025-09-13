@@ -298,6 +298,17 @@ class SettingsController extends Controller
             }
         }
 
+        // Fix homepage image URLs (same approach as gallery)
+        if (!empty($settings['homepage_images']) && is_array($settings['homepage_images'])) {
+            foreach ($settings['homepage_images'] as &$image) {
+                if (isset($image['url']) && !str_starts_with($image['url'], 'https://')) {
+                    if (isset($image['path'])) {
+                        $image['url'] = \Storage::disk('public')->url($image['path']);
+                    }
+                }
+            }
+        }
+
         return $settings;
     }
 
