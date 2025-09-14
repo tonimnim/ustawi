@@ -115,8 +115,7 @@ const categories = {
                 ],
                 images: [
                     "https://res.cloudinary.com/dpbheqr2n/image/upload/v1757670604/silent_workers_i2ycmh.jpg"
-                ],
-                videoUrl: "https://www.youtube.com/embed/6Z-t_zcXKg4?si=CNSy3W6Gw7uAjkrp"
+                ]
             },
             {
                 id: 'community-paralegal',
