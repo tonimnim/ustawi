@@ -1,5 +1,5 @@
 <script setup>
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import { ref, onMounted, reactive } from 'vue';
 import PublicLayout from '@/Layouts/PublicLayout.vue';
 
@@ -113,7 +113,9 @@ const categories = {
                     "Distribution of proper harnesses",
                     "Advocacy for animal protection laws"
                 ],
-                image: null,
+                images: [
+                    "https://res.cloudinary.com/dpbheqr2n/image/upload/v1757670604/silent_workers_i2ycmh.jpg"
+                ],
                 videoUrl: "https://www.youtube.com/embed/6Z-t_zcXKg4?si=CNSy3W6Gw7uAjkrp"
             },
             {
@@ -335,9 +337,9 @@ const categories = {
                                         
                                         <!-- CTA Button -->
                                         <div class="flex space-x-4">
-                                            <button class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300">
+                                            <Link href="/donate" class="inline-block bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300">
                                                 Take Action
-                                            </button>
+                                            </Link>
                                         </div>
                                     </div>
                                 </div>
