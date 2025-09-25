@@ -43,10 +43,14 @@ class MediaController extends Controller
                       ->paginate(24)
                       ->withQueryString();
         
-        // Add URL to each media item - use asset() for production
+        // Add URL to each media item - use Storage facade for bucket compatibility
         $media->through(function ($item) {
-            $item->url = asset('storage/' . $item->file_path);
-            $item->thumbnail_url = $item->thumbnail_path ? asset('storage/' . $item->thumbnail_path) : null;
+            $item->url = config('filesystems.default') === 'r2'
+                ? \Storage::disk('r2')->url($item->file_path)
+                : asset('storage/' . $item->file_path);
+            $item->thumbnail_url = $item->thumbnail_path
+                ? (config('filesystems.default') === 'r2' ? \Storage::disk('r2')->url($item->thumbnail_path) : asset('storage/' . $item->thumbnail_path))
+                : null;
             return $item;
         });
         
@@ -112,8 +116,9 @@ class MediaController extends Controller
                 $dimensions = null;
                 $thumbnailPath = null;
                 
-                // Store file in public disk
-                $path = $file->storeAs($folder, $filename, 'public');
+                // Store file in bucket for Laravel Cloud
+                $disk = config('filesystems.default') === 'r2' ? 'r2' : 'public';
+                $path = $file->storeAs($folder, $filename, $disk);
                 
                 // Get file size
                 $fileSize = $file->getSize();
@@ -147,12 +152,16 @@ class MediaController extends Controller
                     'updated_at' => now(),
                 ]);
                 
-                // Generate URL - use asset() for production compatibility
+                // Generate URL - use Storage facade for bucket compatibility
+                $url = config('filesystems.default') === 'r2'
+                    ? \Storage::disk('r2')->url($path)
+                    : asset('storage/' . $path);
+
                 $uploadedFiles[] = [
                     'id' => $mediaId,
                     'name' => $filename,
-                    'url' => asset('storage/' . $path),
-                    'thumbnail_url' => $thumbnailPath ? asset('storage/' . $thumbnailPath) : null,
+                    'url' => $url,
+                    'thumbnail_url' => $thumbnailPath ? (config('filesystems.default') === 'r2' ? \Storage::disk('r2')->url($thumbnailPath) : asset('storage/' . $thumbnailPath)) : null,
                     'mime_type' => $mimeType,
                     'dimensions' => $dimensions,
                 ];
@@ -211,7 +220,8 @@ class MediaController extends Controller
         }
         
         // Delete file from storage
-        Storage::disk('public')->delete($media->file_path);
+        $disk = config('filesystems.default') === 'r2' ? 'r2' : 'public';
+        Storage::disk($disk)->delete($media->file_path);
         
         // Delete from database
         \DB::table('media_files')->where('id', $id)->delete();
@@ -228,10 +238,14 @@ class MediaController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
         
-        // Add URL to each media item - use asset() for production
+        // Add URL to each media item - use Storage facade for bucket compatibility
         $media->transform(function ($item) {
-            $item->url = asset('storage/' . $item->file_path);
-            $item->thumbnail_url = $item->thumbnail_path ? asset('storage/' . $item->thumbnail_path) : null;
+            $item->url = config('filesystems.default') === 'r2'
+                ? \Storage::disk('r2')->url($item->file_path)
+                : asset('storage/' . $item->file_path);
+            $item->thumbnail_url = $item->thumbnail_path
+                ? (config('filesystems.default') === 'r2' ? \Storage::disk('r2')->url($item->thumbnail_path) : asset('storage/' . $item->thumbnail_path))
+                : null;
             return $item;
         });
         
